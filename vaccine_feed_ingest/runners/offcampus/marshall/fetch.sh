@@ -12,5 +12,4 @@ fi
 
 (cd "$output_dir" && curl --silent "https://www.themarshallrochester.com/floorplans/" -o 'rates-floorplans.html')
 
-(cd "$output_dir" && curl --silent "https://www.themarshallrochester.com/amenities/
-" -o 'amenities.html')
+(cd "$output_dir" && curl --silent "https://www.themarshallrochester.com/amenities/" -o 'amenities.html')
