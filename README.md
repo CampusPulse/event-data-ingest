@@ -2,7 +2,7 @@
 
 [![see results in vaccine-feed-ingest-results](https://img.shields.io/static/v1?label=see%20results&message=vaccine-feed-ingest-results&color=brightgreen)](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results)
 
-Pipeline for ingesting nationwide feeds of vaccine facilities.
+Pipeline for ingesting data about housing near RIT. 
 ## Contributing
 
 ### How to
