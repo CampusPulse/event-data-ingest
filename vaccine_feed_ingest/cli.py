@@ -10,7 +10,6 @@ from typing import Callable, Collection, Dict, Optional, Sequence
 
 import click
 import dotenv
-import pathy
 import sentry_sdk
 
 from vaccine_feed_ingest.utils.log import getLogger
@@ -32,9 +31,9 @@ def _generate_run_timestamp() -> str:
 def _pathy_data_path(ctx, param, value):
     """Parameter callback for click to transform str into pathy local or GCS path."""
     try:
-        return pathy.Pathy.fluid(value)
+        return pathlib.Path(value)
     except (TypeError, ValueError):
-        raise click.BadParameter("Data path needs to be a local or GCS file path.")
+        raise click.BadParameter("Data path needs to be a local file path.")
 
 
 # --- Common Click options --- #
