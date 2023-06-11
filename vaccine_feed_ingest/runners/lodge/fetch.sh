@@ -11,3 +11,5 @@ else
 fi
 
 (cd "$output_dir" && curl --silent "https://livethelodge.com/rates-floorplans/" -o 'rates-floorplans.html')
+
+(cd "$output_dir" && curl --silent "https://livethelodge.com/features/" -o 'amenities.html')
