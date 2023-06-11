@@ -10,7 +10,7 @@ else
     echo "Must pass an output_dir as first argument"
 fi
 
-(cd "$output_dir" && curl --silent "https://www.lifeatapex.com/models" -o 'rates-floorplans.html')
+(cd "$output_dir" && curl --silent "https://www.lifeatapex.com/api/v1/content" -o 'data.json')
 
 (cd "$output_dir" && curl --silent "https://www.lifeatapex.com/amenities" -o 'amenities.html')
 
