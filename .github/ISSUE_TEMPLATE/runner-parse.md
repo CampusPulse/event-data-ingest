@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-[![learn our pipeline: parse](https://img.shields.io/static/v1?label=learn%20our%20pipeline&message=parse&style=social)](https://github.com/CAVaccineInventory/vaccine-feed-ingest/wiki/Runner-pipeline-stages#parse)
+[![learn our pipeline: parse](https://img.shields.io/static/v1?label=learn%20our%20pipeline&message=parse&style=social)](https://github.com/rit-hc-website/data-ingest/wiki/Runner-pipeline-stages#parse)
 
 Parse existing data into [`.ndjson`](http://ndjson.org/).
 

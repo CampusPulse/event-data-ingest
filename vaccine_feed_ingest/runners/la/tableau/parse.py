@@ -74,7 +74,7 @@ def parse_tableau(file_contents):
             zip, zip(itertools.repeat(data_dict.keys()), zip(*data_dict.values()))
         ),
     )
-    # Data contains at least one bad value; filter it out. See https://github.com/CAVaccineInventory/vaccine-feed-ingest/issues/621
+    # Data contains at least one bad value; filter it out. See https://github.com/rit-hc-website/data-ingest/issues/621
     filtered_transposed_data = (
         row for row in transposed_data if row["Site-value"] != "%null%"
     )

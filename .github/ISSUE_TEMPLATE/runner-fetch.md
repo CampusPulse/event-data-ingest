@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-[![learn our pipeline: fetch](https://img.shields.io/static/v1?label=learn%20our%20pipeline&message=fetch&style=social)](https://github.com/CAVaccineInventory/vaccine-feed-ingest/wiki/Runner-pipeline-stages#fetch)
+[![learn our pipeline: fetch](https://img.shields.io/static/v1?label=learn%20our%20pipeline&message=fetch&style=social)](https://github.com/rit-hc-website/data-ingest/wiki/Runner-pipeline-stages#fetch)
 
 Fetch data from: <!-- ENTER URL HERE -->
 
