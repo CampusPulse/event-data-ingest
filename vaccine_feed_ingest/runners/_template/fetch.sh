@@ -18,3 +18,7 @@ fi
 
 echo "Fetching into ${output_dir}"
 touch "${output_dir}/data.geojson"
+
+###
+
+(cd "$output_dir" && curl --silent "url_here" -o 'filename.html')
