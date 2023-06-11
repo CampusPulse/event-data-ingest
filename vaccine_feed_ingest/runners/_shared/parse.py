@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
+#
+# Parse stage should convert raw data into json records and store as ndjson.
+#
+
 import json
 import os
 import pathlib
 import re
 import sys
-from typing import List
+from typing import Dict, List
 
 import yaml
 from bs4 import BeautifulSoup
@@ -18,6 +22,49 @@ OUTPUT_DIR = pathlib.Path(sys.argv[1])
 INPUT_DIR = pathlib.Path(sys.argv[2])
 YML_CONFIG = pathlib.Path(sys.argv[3])
 
+
+
+def soupify_file(input_path: pathlib.Path) -> List[BeautifulSoup]:
+    """Opens up a provided file path, feeds it into BeautifulSoup.
+    Returns a new BeautifulSoup object for each found table
+    """
+    with open(input_path, "r") as fd:
+        return BeautifulSoup(fd, "html.parser")
+
+
+def extract_room_info(page: BeautifulSoup) -> Dict[str, str]:
+    """Takes a BeautifulSoup tag corresponding to a page as input,
+    Returns a dict of labeled data, suitable for transformation into ndjson
+    """
+    result: Dict[str, str] = {}
+
+
+    roomSizes = page.find_all("div",class_="field--name-field-room-size")
+    singleSemCosts = page.find_all("div",class_="field--name-field-per-semester-per-person")
+    twoSemCosts = page.find_all("div",class_="field--name-field-per-2-semesters-per-person")
+    roomSizeArr = []
+    singSemCostArr = []
+    twoSemCostArr = []
+    for roomSize in roomSizes:
+        roomSizeArr.append(roomSize.text)
+    for singleSemCost in singleSemCosts:
+        singSemCostArr.append(singleSemCost.text)
+    for twoSemCost in twoSemCosts:
+        twoSemCostArr.append(twoSemCost.text)
+
+    result["rooms"] = []
+
+    for i in range(len(roomSizeArr)):
+        roomStyle = {}
+        roomStyle["size"] = roomSizeArr[i]
+        roomStyle["cost"] = {
+            "semster": singSemCostArr[i],
+            "year": twoSemCostArr[i],
+            "summer":""
+        }
+        result["rooms"].append(roomStyle)
+
+    return result
 
 def _enforce_keys(config: dict, keys: List[str]) -> None:
     for key in keys:
@@ -74,22 +121,28 @@ def _prepmod_find_data_item(parent, label, offset):
 config = _get_config(YML_CONFIG)
 EXTRACT_CLINIC_ID = re.compile(r".*clinic(\d*)\.png")
 
-if config["parser"] == "arcgis_features":
+if config["parser"] == "rithousing":
     """
-    ArcGIS FeatureServers fetch as a json object containing a "features"
-    attribute which contains a list of json objects.
+    RIT housing websites make data available in a very consistent way across basically all on campus housing options
 
     Parse files of this structure.
     """
-    json_filepaths = INPUT_DIR.glob("*.json")
-    for in_filepath in json_filepaths:
-        with in_filepath.open() as fin:
-            arcgis_feature_json = json.load(fin)
+    
+    for html in INPUT_DIR.glob("**/*.html"):
+        if not html.is_file():
+            continue
+        data = []
+        
+        for result in soupify_file(html).find_all("div", class_="view-rates"):
+            data.extend(
+                [extract_room_info(result)]
+            )
 
-        out_filepath = _get_out_filepath(in_filepath, OUTPUT_DIR)
-        _log_activity(config["state"], config["site"], in_filepath, out_filepath)
+        out_filepath = _get_out_filepath(html, OUTPUT_DIR)
 
-        _output_ndjson(arcgis_feature_json["features"], out_filepath)
+        _log_activity(config["state"], config["site"], html, out_filepath)
+
+        _output_ndjson(data, out_filepath)
 
 elif config["parser"] == "json_list":
     """
