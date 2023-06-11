@@ -11,7 +11,7 @@ else
 fi
 
 (cd "$output_dir" && curl --silent "https://www.rit.edu/housing/rates" -o 'rates.html')
-(cd "$output_dir" && curl --silent "https://www.rit.edu/housing/residence-halls" -o 'residence-halls.html')
+
 (cd "$output_dir" && curl --silent "https://www.rit.edu/housing/global-village" -o 'global-village.html')
 (cd "$output_dir" && curl --silent "https://www.rit.edu/housing/riverknoll" -o 'riverknoll.html')
 (cd "$output_dir" && curl --silent "https://www.rit.edu/housing/perkins-green" -o 'perkins-green.html')
