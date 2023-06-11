@@ -46,7 +46,7 @@ def extract_room_info(page: BeautifulSoup) -> Dict[str, str]:
 
     for i in range(len(roomSizeArr)):
         roomStyle = {}
-        roomStyle["size"](roomSizeArr[i])
+        roomStyle["size"] = roomSizeArr[i]
         roomStyle["cost"] = {
             "semster": singSemCostArr[i],
             "year": twoSemCostArr[i],
