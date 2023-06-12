@@ -12,7 +12,7 @@ import click
 import dotenv
 import sentry_sdk
 
-from vaccine_feed_ingest.utils.log import getLogger
+from housing_data_ingest.utils.log import getLogger
 
 from . import vial
 from .stages import caching, common, ingest, load, site

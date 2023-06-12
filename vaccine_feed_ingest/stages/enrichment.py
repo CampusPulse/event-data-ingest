@@ -9,7 +9,7 @@
 # import pydantic
 # from vaccine_feed_ingest_schema import location
 
-# from vaccine_feed_ingest.utils.log import getLogger
+# from housing_data_ingest.utils.log import getLogger
 
 # from ..apis.geocodio import GeocodioAPI
 # from ..apis.placekey import PlacekeyAPI

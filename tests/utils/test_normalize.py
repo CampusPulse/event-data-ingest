@@ -1,4 +1,4 @@
-from vaccine_feed_ingest.utils import normalize
+from housing_data_ingest.utils import normalize
 
 
 def test_calculate_content_hash(full_location):

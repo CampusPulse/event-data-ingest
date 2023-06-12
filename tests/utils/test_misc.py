@@ -1,6 +1,6 @@
 from typing import Dict, Iterator
 
-from vaccine_feed_ingest.utils import misc
+from housing_data_ingest.utils import misc
 
 
 def test_batch():

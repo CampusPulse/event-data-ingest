@@ -1,6 +1,6 @@
 from vaccine_feed_ingest_schema import location as schema
 
-from vaccine_feed_ingest.utils.normalize import normalize_phone
+from housing_data_ingest.utils.normalize import normalize_phone
 
 
 def test_normalize_phone():

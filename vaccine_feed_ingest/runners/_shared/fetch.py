@@ -8,7 +8,7 @@ import urllib.parse
 import requests
 import yaml
 
-from vaccine_feed_ingest.utils.log import getLogger
+from housing_data_ingest.utils.log import getLogger
 
 # import arcgis ingestor
 shared_dir = pathlib.Path(__file__).parent

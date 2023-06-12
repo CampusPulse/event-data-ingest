@@ -12,7 +12,7 @@ import pydantic
 from sentry_sdk import set_tag
 from vaccine_feed_ingest_schema import location
 
-from vaccine_feed_ingest.utils.log import getLogger
+from housing_data_ingest.utils.log import getLogger
 
 from ..utils.validation import VACCINATE_THE_STATES_BOUNDARY
 from . import caching, enrichment, outputs, site

@@ -1,6 +1,6 @@
 import pathlib
 
-from vaccine_feed_ingest.stages import caching
+from housing_data_ingest.stages import caching
 
 
 def test_cache_from_archive(tmpdir):

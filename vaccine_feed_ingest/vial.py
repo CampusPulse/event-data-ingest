@@ -13,7 +13,7 @@
 # import urllib3
 # from vaccine_feed_ingest_schema import load
 
-# from vaccine_feed_ingest.utils.log import getLogger
+# from housing_data_ingest.utils.log import getLogger
 
 # from .utils import misc
 

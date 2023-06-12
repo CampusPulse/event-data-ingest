@@ -1,4 +1,4 @@
-from vaccine_feed_ingest.utils.parse import location_id_from_name
+from housing_data_ingest.utils.parse import location_id_from_name
 
 
 def _test(input_name, expected_output_id):

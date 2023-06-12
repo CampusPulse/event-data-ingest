@@ -21,7 +21,7 @@ def getLogger(file_path: str) -> Logger:
     Example usage:
 
     ```python
-    from vaccine_feed_ingest.utils.log import getLogger
+    from housing_data_ingest.utils.log import getLogger
 
     logger = getLogger(__file__)
     ```

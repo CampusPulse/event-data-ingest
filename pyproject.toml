@@ -52,7 +52,7 @@ lint = ["flake8", "black", "mypy", "isort"]
 test = ["pytest", "pytest-runner"]
 
 [tool.poetry.scripts]
-vaccine-feed-ingest = "vaccine_feed_ingest.cli:cli"
+vaccine-feed-ingest = "housing_data_ingest.cli:cli"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

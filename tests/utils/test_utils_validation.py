@@ -1,6 +1,6 @@
 from vaccine_feed_ingest_schema import location
 
-from vaccine_feed_ingest.utils import validation
+from housing_data_ingest.utils import validation
 
 
 def test_bounding_box_contains():
