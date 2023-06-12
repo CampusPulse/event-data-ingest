@@ -19,13 +19,13 @@ Check the wiki to learn more about the purpose of the parse stage and how to get
 
 1. Fetch data for this site before you start developing:
     ```sh
-    poetry run vaccine-feed-ingest fetch <state>/<site>
+    poetry run housing-data-ingest fetch <state>/<site>
     ```
 
 1. While working on your code, run it at any point:
     ```sh
-    poetry run vaccine-feed-ingest parse <state>/<site>
+    poetry run housing-data-ingest parse <state>/<site>
     ```
 
 ### Example
-[Fetched files for `md/arcgis`](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results/tree/main/md/arcgis/raw) are converted to [parsed files](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results/tree/main/md/arcgis/parsed)
+[Fetched files for `md/arcgis`](https://github.com/rit-hc-website/data-ingest-results/tree/main/md/arcgis/raw) are converted to [parsed files](https://github.com/rit-hc-website/data-ingest-results/tree/main/md/arcgis/parsed)

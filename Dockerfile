@@ -1,13 +1,13 @@
 FROM python:3.9.2-buster
-LABEL name=vaccine-feed-ingest
+LABEL name=housing-data-ingest
 
-RUN useradd -m vaccine && mkdir vaccine-feed-ingest && chown vaccine:vaccine vaccine-feed-ingest
+RUN useradd -m vaccine && mkdir housing-data-ingest && chown vaccine:vaccine housing-data-ingest
 
-COPY ./ /vaccine-feed-ingest/
+COPY ./ /housing-data-ingest/
 
 USER vaccine
 
-WORKDIR /vaccine-feed-ingest
+WORKDIR /housing-data-ingest
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -

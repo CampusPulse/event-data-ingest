@@ -44,7 +44,7 @@ setup_macos() {
     echo ""
     echo "Try this command next:"
     echo ""
-    echo "poetry run vaccine-feed-ingest --help"
+    echo "poetry run housing-data-ingest --help"
 }
 
 setup_linux() {
@@ -84,7 +84,7 @@ setup_linux() {
     echo ""
     echo "Try this command next:"
     echo ""
-    echo "poetry run vaccine-feed-ingest --help"
+    echo "poetry run housing-data-ingest --help"
 }
 
 setup_unsupported() {

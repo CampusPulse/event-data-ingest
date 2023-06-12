@@ -37,12 +37,12 @@ jobs:
 
       - uses: actions/checkout@v2.3.4
         with:
-          repository: CAVaccineInventory/vaccine-feed-ingest
-          path: ./vaccine-feed-ingest/
+          repository: rit-hc-website/data-ingest
+          path: ./housing-data-ingest/
           submodules: true
 
       - name: get python version
-        working-directory: vaccine-feed-ingest
+        working-directory: housing-data-ingest
         run: |
           python_version=$(cat .python-version)
           echo "python_version=${python_version}" >> $GITHUB_ENV
@@ -60,25 +60,25 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v2.1.6
         with:
-          path: vaccine-feed-ingest/.venv
+          path: housing-data-ingest/.venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
       - run: poetry install --extras lint
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        working-directory: vaccine-feed-ingest
+        working-directory: housing-data-ingest
 
       - name: load .tox from cache
         id: cached-tox-dependencies
         uses: actions/cache@v2.1.6
         with:
-          path: vaccine-feed-ingest/.tox
+          path: housing-data-ingest/.tox
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
       - run: poetry run tox
-        working-directory: vaccine-feed-ingest
+        working-directory: housing-data-ingest
 
       - name: clean up .tox
-        working-directory: vaccine-feed-ingest
+        working-directory: housing-data-ingest
         run: |
           rm -f .tox/log/*
           rm -f .tox/test/log/*
@@ -97,13 +97,13 @@ jobs:
 
       - uses: actions/checkout@v2.3.4
         with:
-          repository: CAVaccineInventory/vaccine-feed-ingest
-          path: ./vaccine-feed-ingest/
+          repository: rit-hc-website/data-ingest
+          path: ./housing-data-ingest/
           submodules: true
           fetch-depth: 0
 
       - name: get python version
-        working-directory: vaccine-feed-ingest
+        working-directory: housing-data-ingest
         run: |
           python_version=$(cat .python-version)
           echo "python_version=${python_version}" >> $GITHUB_ENV
@@ -121,19 +121,19 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v2.1.6
         with:
-          path: vaccine-feed-ingest/.venv
+          path: housing-data-ingest/.venv
           key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
       - run: poetry install --extras lint
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        working-directory: vaccine-feed-ingest
+        working-directory: housing-data-ingest
 
       - name: ensure cli starts
-        working-directory: vaccine-feed-ingest
-        run: poetry run vaccine-feed-ingest --help
+        working-directory: housing-data-ingest
+        run: poetry run housing-data-ingest --help
 
       - name: calculate runners to run
-        working-directory: vaccine-feed-ingest
+        working-directory: housing-data-ingest
         run: |
           git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | \
             grep "housing_data_ingest/runners/[^._]" | \
@@ -141,12 +141,12 @@ jobs:
             grep -v "us/" > ../runners_to_run.txt || true
 
       - name: run selected runners
-        working-directory: vaccine-feed-ingest
+        working-directory: housing-data-ingest
         run: |
           if [[ -s ../runners_to_run.txt ]]; then
             echo "will run the following runners"
             cat ../runners_to_run.txt
-            cat ../runners_to_run.txt | xargs poetry run vaccine-feed-ingest all-stages
+            cat ../runners_to_run.txt | xargs poetry run housing-data-ingest all-stages
           else
             echo "no runners to run"
           fi

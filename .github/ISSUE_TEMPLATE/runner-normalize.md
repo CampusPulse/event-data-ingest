@@ -19,14 +19,14 @@ Check the wiki to learn more about the purpose of the normalize stage and how to
 
 1. Fetch and parse data for this site before you start developing:
     ```sh
-    poetry run vaccine-feed-ingest fetch <state>/<site>
-    poetry run vaccine-feed-ingest parse <state>/<site>
+    poetry run housing-data-ingest fetch <state>/<site>
+    poetry run housing-data-ingest parse <state>/<site>
     ```
 
 1. While working on your code, run it at any point:
     ```sh
-    poetry run vaccine-feed-ingest normalize <state>/<site>
+    poetry run housing-data-ingest normalize <state>/<site>
     ```
 
 ### Example
-[Parsed files for `ak/arcgis`](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results/tree/main/ak/arcgis/parsed) are converted to [normalized files](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results/tree/main/ak/arcgis/normalized)
+[Parsed files for `ak/arcgis`](https://github.com/rit-hc-website/data-ingest-results/tree/main/ak/arcgis/parsed) are converted to [normalized files](https://github.com/rit-hc-website/data-ingest-results/tree/main/ak/arcgis/normalized)
