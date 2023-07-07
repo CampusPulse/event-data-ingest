@@ -10,7 +10,7 @@ from typing import Collection, Optional
 import orjson
 import pydantic
 from sentry_sdk import set_tag
-from vaccine_feed_ingest_schema import location
+from rit_housing_data_schema import apartment
 
 from housing_data_ingest.utils.log import getLogger
 
@@ -298,7 +298,7 @@ def run_normalize(
 
         if validate:
             if not _validate_normalized(normalize_output_dir):
-                msg = f"{normalize_path.name} for {site_dir.name} returned invalid source location ndjson files."
+                msg = f"{normalize_path.name} for {site_dir.name} returned invalid source apartment ndjson files."
                 if fail_on_runner_error:
                     raise TypeError(msg)
                 logger.warning(msg)
@@ -436,18 +436,19 @@ def _validate_parsed(output_dir: pathlib.Path) -> bool:
 
 
 def _validate_normalized(output_dir: pathlib.Path) -> bool:
-    """Validate output files are valid normalized locations."""
+    """Validate output files are valid normalized apartments."""
     for filepath in outputs.iter_data_paths(
         output_dir, suffix=STAGE_OUTPUT_SUFFIX[PipelineStage.NORMALIZE]
     ):
         with filepath.open(mode="rb") as ndjson_file:
             for line_no, content in enumerate(ndjson_file, start=1):
                 if len(content) > MAX_NORMALIZED_RECORD_SIZE:
+                    logger.warning(len(content))
                     logger.warning(
-                        "Source location too large to process in %s at line %d: %s",
+                        "Source apartment too large to process in %s at line %d: %s",
                         filepath,
                         line_no,
-                        content[:100],
+                        content,
                     )
                     return False
 
@@ -463,12 +464,12 @@ def _validate_normalized(output_dir: pathlib.Path) -> bool:
                     return False
 
                 try:
-                    normalized_location = location.NormalizedLocation.parse_obj(
+                    normalized_aptcomplex = apartment.NormalizedApartmentComplex.parse_obj(
                         content_dict
                     )
                 except pydantic.ValidationError as e:
                     logger.warning(
-                        "Invalid source location in %s at line %d: %s\n%s",
+                        "Invalid source apartment in %s at line %d: %s\n%s",
                         filepath,
                         line_no,
                         content[:100],
@@ -476,17 +477,17 @@ def _validate_normalized(output_dir: pathlib.Path) -> bool:
                     )
                     return False
 
-                if normalized_location.location:
-                    if not VACCINATE_THE_STATES_BOUNDARY.contains(
-                        normalized_location.location
-                    ):
-                        logger.warning(
-                            "Invalid latitude or longitude in %s at line %d: %s is outside approved bounds (%s)",
-                            filepath,
-                            line_no,
-                            normalized_location.location,
-                            VACCINATE_THE_STATES_BOUNDARY,
-                        )
-                        return False
+                # if normalized_aptcomplex.location:
+                #     if not VACCINATE_THE_STATES_BOUNDARY.contains(
+                #         normalized_aptcomplex.location
+                #     ):
+                #         logger.warning(
+                #             "Invalid latitude or longitude in %s at line %d: %s is outside approved bounds (%s)",
+                #             filepath,
+                #             line_no,
+                #             normalized_aptcomplex.location,
+                #             VACCINATE_THE_STATES_BOUNDARY,
+                #         )
+                #         return False
 
     return True
