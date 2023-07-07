@@ -359,7 +359,7 @@ def _get_unit_type(model: dict) -> Optional[apartment.UnitType]:
             # shared=False,
             bedroomCount=model.get("beds"),
             bathroomCount=model.get("baths"),
-            floorplanUrl=f'https://assets.myrazz.com/{images[0].get("uuid")}' if images else None, #TODO: get floorplan image,
+            floorplanUrl=f'https://assets.myrazz.com/{images[0].get("uuid")}/' if images else None, #TODO: get floorplan image,
             rent=apartment.RentCost(
                 minCost=rent["min"] if rent else None,
                 maxCost=rent["min"] if rent else None,
