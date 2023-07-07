@@ -351,6 +351,7 @@ def _get_unit_type(model: dict) -> Optional[apartment.UnitType]:
 
         rent = model.get("rent")
         images = model.get("images")
+        # TODO: handle more than one image in this images list (if present)
 
         return apartment.UnitType(
             name=modelname,
@@ -359,7 +360,7 @@ def _get_unit_type(model: dict) -> Optional[apartment.UnitType]:
             # shared=False,
             bedroomCount=model.get("beds"),
             bathroomCount=model.get("baths"),
-            floorplanUrl=f'https://assets.myrazz.com/{images[0].get("uuid")}/' if images else None, #TODO: get floorplan image,
+            floorplanUrl=f'https://assets.myrazz.com/{images[0].get("uuid")}/' if images else None,
             rent=apartment.RentCost(
                 minCost=rent["min"] if rent else None,
                 maxCost=rent["min"] if rent else None,

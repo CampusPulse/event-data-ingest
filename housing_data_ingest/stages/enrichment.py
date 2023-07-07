@@ -23,6 +23,9 @@
 # PROVIDER_TAG = "_tag_provider"
 # GEOCODIO_BATCH_SIZE = 1_000
 
+# TODO
+# Just make sure, if theres only one cost (no max/min), set both to the same thing
+
 
 # def enrich_locations(
 #     input_dir: pathlib.Path,
