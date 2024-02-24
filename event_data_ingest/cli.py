@@ -254,7 +254,7 @@ def _import_limit_option() -> Callable:
 
 @click.group()
 def cli():
-    """Run housing-data-ingest commands"""
+    """Run event-data-ingest commands"""
     dotenv.load_dotenv()
 
     sentry_enabled = os.environ.get("SENTRY_ENABLE", False)

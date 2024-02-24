@@ -1,4 +1,4 @@
-# housing-data-ingest
+# event-data-ingest
 
 [![see results in vaccine-feed-ingest-results](https://img.shields.io/static/v1?label=see%20results&message=vaccine-feed-ingest-results&color=brightgreen)](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results)
 
@@ -15,7 +15,7 @@ Results are periodically committed to [`vaccine-feed-ingest-results`](https://gi
 
 ### Run the tool
 
-[See the wiki](https://github.com/rit-hc-website/data-ingest/wiki/Run-vaccine-feed-ingest) for instructions on how to run `housing-data-ingest`.
+[See the wiki](https://github.com/rit-hc-website/data-ingest/wiki/Run-vaccine-feed-ingest) for instructions on how to run `event-data-ingest`.
 
 
 ## Production Details
@@ -42,7 +42,7 @@ Results are also periodically committed to [`vaccine-feed-ingest-results`](https
 1. Run ingestion with an GCS `--output-dir`
 
   ```sh
-  poetry run housing-data-ingest all-stages --output-dir=gs://vaccine-feeds-dev/locations/
+  poetry run event-data-ingest all-stages --output-dir=gs://vaccine-feeds-dev/locations/
   ```
 
 ### Load Source Locations
@@ -60,5 +60,5 @@ Results are also periodically committed to [`vaccine-feed-ingest-results`](https
 - Load SF.GOV source feed to VIAL
 
   ```sh
-  poetry run housing-data-ingest load-to-vial ca/sf_gov
+  poetry run event-data-ingest load-to-vial ca/sf_gov
   ```
