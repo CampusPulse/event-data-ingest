@@ -1,4 +1,4 @@
-from housing_data_ingest.utils import normalize
+from event_data_ingest.utils import normalize
 
 
 def test_calculate_content_hash(full_location):

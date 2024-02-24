@@ -4,7 +4,7 @@ import os
 import pathlib
 from typing import Collection, Iterator, Optional, Sequence, Tuple
 
-from housing_data_ingest.utils.log import getLogger
+from event_data_ingest.utils.log import getLogger
 
 from .common import RUNNERS_DIR, STAGE_CMD_NAME, PipelineStage
 

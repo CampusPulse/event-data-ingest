@@ -1,6 +1,6 @@
 from vaccine_feed_ingest_schema.location import VaccineProvider
 
-from housing_data_ingest.utils.normalize import provider_id_from_name
+from event_data_ingest.utils.normalize import provider_id_from_name
 
 
 def test_provider_id_from_name():

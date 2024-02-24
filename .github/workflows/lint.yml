@@ -136,8 +136,8 @@ jobs:
         working-directory: housing-data-ingest
         run: |
           git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | \
-            grep "housing_data_ingest/runners/[^._]" | \
-            sed -E "s#housing_data_ingest/runners/([^/]+)/([^/]+)/.*#\1/\2#" | \
+            grep "event_data_ingest/runners/[^._]" | \
+            sed -E "s#event_data_ingest/runners/([^/]+)/([^/]+)/.*#\1/\2#" | \
             grep -v "us/" > ../runners_to_run.txt || true
 
       - name: run selected runners

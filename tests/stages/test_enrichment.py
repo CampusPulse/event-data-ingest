@@ -1,6 +1,6 @@
 from vaccine_feed_ingest_schema import location
 
-from housing_data_ingest.stages import enrichment
+from event_data_ingest.stages import enrichment
 
 
 def test_add_provider_from_name_minimal(minimal_location):

@@ -51,7 +51,7 @@ lint = ["flake8", "black", "mypy", "isort"]
 test = ["pytest", "pytest-runner"]
 
 [tool.poetry.scripts]
-housing-data-ingest = "housing_data_ingest.cli:cli"
+housing-data-ingest = "event_data_ingest.cli:cli"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

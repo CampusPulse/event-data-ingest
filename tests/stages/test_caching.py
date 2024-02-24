@@ -1,6 +1,6 @@
 import pathlib
 
-from housing_data_ingest.stages import caching
+from event_data_ingest.stages import caching
 
 
 def test_cache_from_archive(tmpdir):

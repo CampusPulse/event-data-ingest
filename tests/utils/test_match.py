@@ -1,6 +1,6 @@
 from vaccine_feed_ingest_schema import location
 
-from housing_data_ingest.utils import match
+from event_data_ingest.utils import match
 
 
 def test_is_concordance_similar(full_location, minimal_location, vial_location):

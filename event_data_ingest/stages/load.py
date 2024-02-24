@@ -12,7 +12,7 @@ import us
 from sentry_sdk import set_tag
 from vaccine_feed_ingest_schema import load, location
 
-from housing_data_ingest.utils.log import getLogger
+from event_data_ingest.utils.log import getLogger
 
 from .. import vial
 from ..utils import misc, normalize

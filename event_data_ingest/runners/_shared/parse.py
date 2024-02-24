@@ -14,7 +14,7 @@ from typing import Dict, List
 import yaml
 from bs4 import BeautifulSoup
 
-from housing_data_ingest.utils.log import getLogger
+from event_data_ingest.utils.log import getLogger
 
 logger = getLogger(__file__)
 

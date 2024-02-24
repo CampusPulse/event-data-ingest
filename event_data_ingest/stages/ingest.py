@@ -12,7 +12,7 @@ import pydantic
 from sentry_sdk import set_tag
 from rit_housing_data_schema import apartment
 
-from housing_data_ingest.utils.log import getLogger
+from event_data_ingest.utils.log import getLogger
 
 from ..utils.validation import VACCINATE_THE_STATES_BOUNDARY
 from . import caching, enrichment, outputs, site
