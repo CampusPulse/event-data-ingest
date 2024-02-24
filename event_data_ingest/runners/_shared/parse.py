@@ -13,6 +13,8 @@ from typing import Dict, List
 
 import yaml
 from bs4 import BeautifulSoup
+from ics import Calendar, Event
+
 
 from event_data_ingest.utils.log import getLogger
 
@@ -109,105 +111,110 @@ def _output_ndjson(json_list: List[dict], out_filepath: pathlib.Path) -> None:
             fout.write("\n")
 
 
-def _prepmod_find_data_item(parent, label, offset):
-    row_matches = [x for x in parent.find_all(["p", "div"]) if label in x.get_text()]
-    try:
-        content = row_matches[-1].contents[offset]
-    except IndexError:
-        return ""
-    return content.strip() if isinstance(content, str) else content.get_text().strip()
+# def _prepmod_find_data_item(parent, label, offset):
+#     row_matches = [x for x in parent.find_all(["p", "div"]) if label in x.get_text()]
+#     try:
+#         content = row_matches[-1].contents[offset]
+#     except IndexError:
+#         return ""
+#     return content.strip() if isinstance(content, str) else content.get_text().strip()
 
 
 config = _get_config(YML_CONFIG)
-EXTRACT_CLINIC_ID = re.compile(r".*clinic(\d*)\.png")
+# EXTRACT_CLINIC_ID = re.compile(r".*clinic(\d*)\.png")
 
-if config["parser"] == "rithousing":
+if config["parser"] == "ics":
     """
-    RIT housing websites make data available in a very consistent way across basically all on campus housing options
+    parse ICS formatted data
+    """
 
-    Parse files of this structure.
-    """
-    
-    for html in INPUT_DIR.glob("**/*.html"):
-        if not html.is_file():
+    for ics in INPUT_DIR.glob("**/*.ics"):
+        if not ics.is_file():
             continue
-        data = []
         
-        for result in soupify_file(html).find_all("div", class_="view-rates"):
-            data.extend(
-                [extract_room_info(result)]
-            )
+        events = []
 
-        out_filepath = _get_out_filepath(html, OUTPUT_DIR)
 
-        _log_activity(config["state"], config["site"], html, out_filepath)
+        c = Calendar(ics.read_text())
+        for event in c.events:
+            print(event)
+    
+        
+        # for result in soupify_file(html).find_all("div", class_="view-rates"):
+        #     data.extend(
+        #         [extract_room_info(result)]
+        #     )
 
-        _output_ndjson(data, out_filepath)
+        out_filepath = _get_out_filepath(ics, OUTPUT_DIR)
 
-elif config["parser"] == "json_list":
-    """
-    Parse files containing lists of json objects.
-    """
-    json_filepaths = INPUT_DIR.glob("*.json")
-    for in_filepath in json_filepaths:
-        with in_filepath.open() as fin:
-            json_list = json.load(fin)
+        _log_activity(config["state"], config["site"], ics, out_filepath)
 
-        for path_element in config.get("path", []):
-            json_list = json_list[path_element]
+        _output_ndjson(events, out_filepath)
 
-        out_filepath = _get_out_filepath(in_filepath, OUTPUT_DIR)
-        _log_activity(config["state"], config["site"], in_filepath, out_filepath)
+# elif config["parser"] == "json_list":
+#     """
+#     Parse files containing lists of json objects.
+#     """
+#     json_filepaths = INPUT_DIR.glob("*.json")
+#     for in_filepath in json_filepaths:
+#         with in_filepath.open() as fin:
+#             json_list = json.load(fin)
 
-        _output_ndjson(json_list, out_filepath)
+#         for path_element in config.get("path", []):
+#             json_list = json_list[path_element]
 
-elif config["parser"] == "prepmod":
-    """
-    Parse HTML 'prepmod' data.
-    """
-    input_filenames = INPUT_DIR.glob("*.html")
+#         out_filepath = _get_out_filepath(in_filepath, OUTPUT_DIR)
+#         _log_activity(config["state"], config["site"], in_filepath, out_filepath)
 
-    for filename in input_filenames:
-        out_filepath = _get_out_filepath(filename, OUTPUT_DIR)
-        text = open(filename, "r").read()
-        soup = BeautifulSoup(text, "html.parser")
+#         _output_ndjson(json_list, out_filepath)
 
-        # classes only used on titles for search results
-        with open(out_filepath, "w") as fout:
-            for title in soup.select(".text-xl.font-black"):
-                parent = title.parent
-                combined_name = title.get_text().strip()
-                name, date = combined_name.rsplit(" on ", 1)
-                address = title.find_next_sibling("p").get_text().strip()
-                vaccines = _prepmod_find_data_item(parent, "Vaccinations offered", -2)
-                ages = _prepmod_find_data_item(parent, "Age groups served", -1)
-                additional_info = _prepmod_find_data_item(
-                    parent, "Additional Information", -1
-                )
-                hours = _prepmod_find_data_item(parent, "Clinic Hours", -1)
-                available_count = (
-                    _prepmod_find_data_item(parent, "Available Appointments", -1) or 0
-                )
-                special = _prepmod_find_data_item(parent, "Special Instructions", -1)
-                if content := parent.find_next_sibling("div", "map-image").find("img"):
-                    find_clinic_id = EXTRACT_CLINIC_ID.match(content["src"])
-                    clinic_id = find_clinic_id.group(1)
-                else:
-                    clinic_id = ""
-                data = {
-                    "name": name,
-                    "date": date,
-                    "address": address,
-                    "vaccines": vaccines,
-                    "ages": ages,
-                    "info": additional_info,
-                    "hours": hours,
-                    "available": available_count,
-                    "special": special,
-                    "clinic_id": clinic_id,
-                }
-                json.dump(data, fout)
-                fout.write("\n")
+# elif config["parser"] == "prepmod":
+#     """
+#     Parse HTML 'prepmod' data.
+#     """
+#     input_filenames = INPUT_DIR.glob("*.html")
+
+#     for filename in input_filenames:
+#         out_filepath = _get_out_filepath(filename, OUTPUT_DIR)
+#         text = open(filename, "r").read()
+#         soup = BeautifulSoup(text, "html.parser")
+
+#         # classes only used on titles for search results
+#         with open(out_filepath, "w") as fout:
+#             for title in soup.select(".text-xl.font-black"):
+#                 parent = title.parent
+#                 combined_name = title.get_text().strip()
+#                 name, date = combined_name.rsplit(" on ", 1)
+#                 address = title.find_next_sibling("p").get_text().strip()
+#                 vaccines = _prepmod_find_data_item(parent, "Vaccinations offered", -2)
+#                 ages = _prepmod_find_data_item(parent, "Age groups served", -1)
+#                 additional_info = _prepmod_find_data_item(
+#                     parent, "Additional Information", -1
+#                 )
+#                 hours = _prepmod_find_data_item(parent, "Clinic Hours", -1)
+#                 available_count = (
+#                     _prepmod_find_data_item(parent, "Available Appointments", -1) or 0
+#                 )
+#                 special = _prepmod_find_data_item(parent, "Special Instructions", -1)
+#                 if content := parent.find_next_sibling("div", "map-image").find("img"):
+#                     find_clinic_id = EXTRACT_CLINIC_ID.match(content["src"])
+#                     clinic_id = find_clinic_id.group(1)
+#                 else:
+#                     clinic_id = ""
+#                 data = {
+#                     "name": name,
+#                     "date": date,
+#                     "address": address,
+#                     "vaccines": vaccines,
+#                     "ages": ages,
+#                     "info": additional_info,
+#                     "hours": hours,
+#                     "available": available_count,
+#                     "special": special,
+#                     "clinic_id": clinic_id,
+#                 }
+#                 json.dump(data, fout)
+#                 fout.write("\n")
 else:
     logger.error("Parser '%s' was not recognized.", config["parser"])
     raise NotImplementedError(f"No shared parser available for '{config['parser']}'.")
