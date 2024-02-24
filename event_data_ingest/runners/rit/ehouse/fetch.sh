@@ -17,8 +17,8 @@ fi
 ### Replace the following with your implementation ###
 
 echo "Fetching into ${output_dir}"
-touch "${output_dir}/data.geojson"
+touch "${output_dir}/events.ics"
 
 ###
 
-(cd "$output_dir" && curl --silent "https://calendar.google.com/calendar/ical/enghouseevents%40gmail.com/public/basic.ics" -o 'ehouse.ics')
+(cd "$output_dir" && curl --silent "https://calendar.google.com/calendar/ical/enghouseevents%40gmail.com/public/basic.ics" -o 'events.ics')
