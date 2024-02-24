@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-[![learn our pipeline: parse](https://img.shields.io/static/v1?label=learn%20our%20pipeline&message=parse&style=social)](https://github.com/rit-hc-website/data-ingest/wiki/Runner-pipeline-stages#parse)
+[![learn our pipeline: parse](https://img.shields.io/static/v1?label=learn%20our%20pipeline&message=parse&style=social)](https://github.com/CampusPulse/data-ingest/wiki/Runner-pipeline-stages#parse)
 
 Parse existing data into [`.ndjson`](http://ndjson.org/).
 
@@ -28,4 +28,4 @@ Check the wiki to learn more about the purpose of the parse stage and how to get
     ```
 
 ### Example
-[Fetched files for `md/arcgis`](https://github.com/rit-hc-website/data-ingest-results/tree/main/md/arcgis/raw) are converted to [parsed files](https://github.com/rit-hc-website/data-ingest-results/tree/main/md/arcgis/parsed)
+[Fetched files for `md/arcgis`](https://github.com/CampusPulse/data-ingest-results/tree/main/md/arcgis/raw) are converted to [parsed files](https://github.com/CampusPulse/data-ingest-results/tree/main/md/arcgis/parsed)
