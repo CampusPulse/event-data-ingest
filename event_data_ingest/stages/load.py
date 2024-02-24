@@ -10,19 +10,19 @@ import shapely.geometry
 import urllib3
 import us
 from sentry_sdk import set_tag
-from campuspulse_event_ingest_schema import load, location
+# from campuspulse_event_ingest_schema import load, location
 
 from event_data_ingest.utils.log import getLogger
 
 from .. import vial
 from ..utils import misc, normalize
-from ..utils.match import (
-    is_address_similar,
-    is_concordance_similar,
-    is_phone_number_similar,
-    is_provider_similar,
-    is_provider_tag_similar,
-)
+# from ..utils.match import (
+    # is_address_similar,
+    # is_concordance_similar,
+    # is_phone_number_similar,
+    # is_provider_similar,
+    # is_provider_tag_similar,
+# )
 from . import outputs
 from .common import STAGE_OUTPUT_SUFFIX, PipelineStage
 
@@ -325,64 +325,64 @@ def load_sites_to_vial(
 #     yield from existing.intersection(search_bounds, objects="raw")
 
 
-def _is_different(source: location.NormalizedLocation, candidate: dict) -> bool:
-    """Return True if candidate is so different it couldn't be a match"""
-    candidate_props = candidate.get("properties", {})
+# def _is_different(source: location.NormalizedLocation, candidate: dict) -> bool:
+#     """Return True if candidate is so different it couldn't be a match"""
+#     candidate_props = candidate.get("properties", {})
 
-    # Must be in same state to be considered the same location
-    if source.address and source.address.state and candidate_props.get("state"):
-        src_state = us.states.lookup(source.address.state)
-        cand_state = us.states.lookup(candidate_props["state"])
+#     # Must be in same state to be considered the same location
+#     if source.address and source.address.state and candidate_props.get("state"):
+#         src_state = us.states.lookup(source.address.state)
+#         cand_state = us.states.lookup(candidate_props["state"])
 
-        if src_state != cand_state:
-            return True
+#         if src_state != cand_state:
+#             return True
 
-    # City name must be slightly similiar to match.
-    if source.address and source.address.city and candidate_props.get("city"):
-        src_city = source.address.city
-        cand_city = candidate_props["city"]
+#     # City name must be slightly similiar to match.
+#     if source.address and source.address.city and candidate_props.get("city"):
+#         src_city = source.address.city
+#         cand_city = candidate_props["city"]
 
-        if jellyfish.jaro_winkler(src_city, cand_city) < 0.1:
-            return True
+#         if jellyfish.jaro_winkler(src_city, cand_city) < 0.1:
+#             return True
 
-    # Exclude candidates with mismatched provider tags
-    provider_tag_matches = is_provider_tag_similar(source, candidate)
-    if provider_tag_matches is False:
-        return True
+#     # Exclude candidates with mismatched provider tags
+#     provider_tag_matches = is_provider_tag_similar(source, candidate)
+#     if provider_tag_matches is False:
+#         return True
 
-    return False
+#     return False
 
 
-def _is_match(source: location.NormalizedLocation, candidate: dict) -> bool:
-    """Return True if candidate is so similar it must be a match"""
-    # If concordance matches or doesn't match then trust that first.
-    concordance_matches = is_concordance_similar(source, candidate)
-    if concordance_matches is not None:
-        return concordance_matches
+# def _is_match(source: location.NormalizedLocation, candidate: dict) -> bool:
+#     """Return True if candidate is so similar it must be a match"""
+#     # If concordance matches or doesn't match then trust that first.
+#     concordance_matches = is_concordance_similar(source, candidate)
+#     if concordance_matches is not None:
+#         return concordance_matches
 
-    # Don't match locations with different providers
-    # Try matching with provider tag first, and then switch to provider name match
-    provider_tag_matches = is_provider_tag_similar(source, candidate)
+#     # Don't match locations with different providers
+#     # Try matching with provider tag first, and then switch to provider name match
+#     provider_tag_matches = is_provider_tag_similar(source, candidate)
 
-    if provider_tag_matches is not None:
-        if provider_tag_matches is False:
-            return False
+#     if provider_tag_matches is not None:
+#         if provider_tag_matches is False:
+#             return False
 
-    else:
-        provider_matches = is_provider_similar(source, candidate, threshold=0.7)
-        if provider_matches is not None and provider_matches is False:
-            return False
+#     else:
+#         provider_matches = is_provider_similar(source, candidate, threshold=0.7)
+#         if provider_matches is not None and provider_matches is False:
+#             return False
 
-    # If there are phone numbers and the phone numbers don't match then fail to match
-    phone_matches = is_phone_number_similar(source, candidate)
-    if phone_matches is not None and phone_matches is False:
-        return False
+#     # If there are phone numbers and the phone numbers don't match then fail to match
+#     phone_matches = is_phone_number_similar(source, candidate)
+#     if phone_matches is not None and phone_matches is False:
+#         return False
 
-    address_matches = is_address_similar(source, candidate)
-    if address_matches is not None and address_matches is True:
-        return True
+#     address_matches = is_address_similar(source, candidate)
+#     if address_matches is not None and address_matches is True:
+#         return True
 
-    return False
+#     return False
 
 
 # def _match_source_to_existing_locations(

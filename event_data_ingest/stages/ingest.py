@@ -14,7 +14,7 @@ from rit_housing_data_schema import apartment
 
 from event_data_ingest.utils.log import getLogger
 
-from ..utils.validation import VACCINATE_THE_STATES_BOUNDARY
+# from ..utils.validation import VACCINATE_THE_STATES_BOUNDARY
 from . import caching, enrichment, outputs, site
 from .common import STAGE_OUTPUT_SUFFIX, PipelineStage
 

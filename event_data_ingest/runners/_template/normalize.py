@@ -36,23 +36,23 @@ class CustomBailError(Exception):
     pass
 
 
-def _get_availability(site: dict) -> schema.Availability:
-    appt_only = site["attributes"]["appt_only"]
+# def _get_availability(site: dict) -> schema.Availability:
+#     appt_only = site["attributes"]["appt_only"]
 
-    appt_options = {
-        "Yes": True,
-        "No": False,
-        "Vax only": True,
-        "Test only": False,
-    }
+#     appt_options = {
+#         "Yes": True,
+#         "No": False,
+#         "Vax only": True,
+#         "Test only": False,
+#     }
 
-    avail = try_lookup(appt_options, appt_only, None, name="availability lookup")
+#     avail = try_lookup(appt_options, appt_only, None, name="availability lookup")
 
-    if avail is not None:
-        return schema.Availability(appointments=avail)
-    # there seems to be no walk-in data unless you want to parse "drive_in" = yes and "vehiche_required" = no into a "walk-in = yes"
+#     if avail is not None:
+#         return schema.Availability(appointments=avail)
+#     # there seems to be no walk-in data unless you want to parse "drive_in" = yes and "vehiche_required" = no into a "walk-in = yes"
 
-    return None
+#     return None
 
 
 def _get_id(site: dict) -> str:
@@ -66,26 +66,26 @@ def _get_id(site: dict) -> str:
     return f"{arcgis}_{layer}_{data_id}"
 
 
-def _get_contacts(site: dict) -> Optional[List[schema.Contact]]:
-    contacts = []
-    if site["attributes"]["phone"]:
-        for phone in normalize_phone(site["attributes"]["phone"]):
-            contacts.append(phone)
+# def _get_contacts(site: dict) -> Optional[List[schema.Contact]]:
+#     contacts = []
+#     if site["attributes"]["phone"]:
+#         for phone in normalize_phone(site["attributes"]["phone"]):
+#             contacts.append(phone)
 
-    # if site["attributes"]["publicEmail"]:
-    #     contacts.append(schema.Contact(email=site["attributes"]["publicEmail"]))
+#     # if site["attributes"]["publicEmail"]:
+#     #     contacts.append(schema.Contact(email=site["attributes"]["publicEmail"]))
 
-    # there are multiple urls, vaccine, agency, health dept. etc
-    if site["attributes"]["vaccine_url"]:
-        url = site["attributes"]["vaccine_url"]
-        url = sanitize_url(url)
-        if url:
-            contacts.append(schema.Contact(website=url))
+#     # there are multiple urls, vaccine, agency, health dept. etc
+#     if site["attributes"]["vaccine_url"]:
+#         url = site["attributes"]["vaccine_url"]
+#         url = sanitize_url(url)
+#         if url:
+#             contacts.append(schema.Contact(website=url))
 
-    if len(contacts) > 0:
-        return contacts
+#     if len(contacts) > 0:
+#         return contacts
 
-    return None
+#     return None
 
 
 def sanitize_url(url):
@@ -144,27 +144,27 @@ def _get_active(site: dict) -> Optional[bool]:
     return try_lookup(status_options, status, None, name="active status lookup")
 
 
-def _get_access(site: dict) -> Optional[List[str]]:
-    drive = site["attributes"].get("drive_through")
-    drive_bool = drive is not None and drive == "Yes"
+# def _get_access(site: dict) -> Optional[List[str]]:
+#     drive = site["attributes"].get("drive_through")
+#     drive_bool = drive is not None and drive == "Yes"
 
-    # walk = site["attributes"].get("drive_through")
-    # walk_bool = drive is not None
+#     # walk = site["attributes"].get("drive_through")
+#     # walk_bool = drive is not None
 
-    wheelchair = site["attributes"].get("Wheelchair_Accessible")
+#     wheelchair = site["attributes"].get("Wheelchair_Accessible")
 
-    wheelchair_options = {
-        "Yes": "yes",
-        "Partially": "partial",
-        "Unknown": "no",
-        "Not Applicable": "no",
-        "NA": "no",
-    }
-    wheelchair_bool = try_lookup(
-        wheelchair_options, wheelchair, "no", name="wheelchair access"
-    )
+#     wheelchair_options = {
+#         "Yes": "yes",
+#         "Partially": "partial",
+#         "Unknown": "no",
+#         "Not Applicable": "no",
+#         "NA": "no",
+#     }
+#     wheelchair_bool = try_lookup(
+#         wheelchair_options, wheelchair, "no", name="wheelchair access"
+#     )
 
-    return schema.Access(drive=drive_bool, wheelchair=wheelchair_bool)
+#     return schema.Access(drive=drive_bool, wheelchair=wheelchair_bool)
 
 
 def try_lookup(mapping, value, default, name=None):
@@ -189,24 +189,24 @@ def _get_published_at(site: dict) -> Optional[str]:
     return None
 
 
-def _get_opening_dates(site: dict) -> Optional[List[schema.OpenDate]]:
-    start_date = site["attributes"].get("start_date")
+# def _get_opening_dates(site: dict) -> Optional[List[schema.OpenDate]]:
+#     start_date = site["attributes"].get("start_date")
 
-    end_date = site["attributes"].get("end_date")
+#     end_date = site["attributes"].get("end_date")
 
-    if start_date:
-        start_date = datetime.datetime.fromtimestamp(start_date / 1000)
+#     if start_date:
+#         start_date = datetime.datetime.fromtimestamp(start_date / 1000)
 
-    if end_date:
-        end_date = datetime.datetime.fromtimestamp(end_date / 1000)
+#     if end_date:
+#         end_date = datetime.datetime.fromtimestamp(end_date / 1000)
 
-    if start_date and end_date and start_date > end_date:
-        return None
+#     if start_date and end_date and start_date > end_date:
+#         return None
 
-    if start_date or end_date:
-        return [schema.OpenDate(opens=start_date, closes=end_date)]
-    else:
-        return None
+#     if start_date or end_date:
+#         return [schema.OpenDate(opens=start_date, closes=end_date)]
+#     else:
+#         return None
 
 
 def try_get_list(lis, index, default=None):
@@ -222,17 +222,17 @@ def try_get_list(lis, index, default=None):
         return default
 
 
-def try_get_lat_long(site):
-    location = None
-    try:
-        location = schema.LatLng(
-            latitude=site["geometry"]["y"],
-            longitude=site["geometry"]["x"],
-        )
-    except KeyError:
-        pass
+# def try_get_lat_long(site):
+#     location = None
+#     try:
+#         location = schema.LatLng(
+#             latitude=site["geometry"]["y"],
+#             longitude=site["geometry"]["x"],
+#         )
+#     except KeyError:
+#         pass
 
-    return location
+#     return location
 
 
 def normalize_state_name(name: str) -> str:
@@ -370,36 +370,36 @@ def _get_address(site):
 
 
 # the schema for the incoming data is documented at https://docs.google.com/document/d/1xqZDHtkNHfelez2Rm3mLAKTwz7gjCAMJaMKK_RxK8F8/edit#
-def _get_normalized_location(site: dict, timestamp: str) -> schema.NormalizedLocation:
+# def _get_normalized_location(site: dict, timestamp: str) -> schema.NormalizedLocation:
 
-    if site.get("offers_vaccine") == "No":
-        return None
+#     if site.get("offers_vaccine") == "No":
+#         return None
 
-    return schema.NormalizedLocation(
-        id=f"{SOURCE_NAME}:{_get_id(site)}",
-        name=site["attributes"]["name"],
-        address=_get_address(site),
-        location=try_get_lat_long(site),
-        contact=_get_contacts(site),
-        languages=None,
-        opening_dates=_get_opening_dates(site),
-        opening_hours=_get_opening_hours(site),
-        availability=_get_availability(site),
-        inventory=None,
-        access=_get_access(site),
-        parent_organization=None,
-        links=None,  # TODO
-        notes=_get_notes(site),
-        active=_get_active(site),
-        source=schema.Source(
-            source=SOURCE_NAME,
-            id=site["attributes"]["GlobalID"],
-            fetched_from_uri="https://services.arcgis.com/8ZpVMShClf8U8dae/arcgis/rest/services/Covid19_Vaccination_Locations/FeatureServer/0",  # noqa: E501
-            fetched_at=timestamp,
-            published_at=_get_published_at(site),
-            data=site,
-        ),
-    )
+#     return schema.NormalizedLocation(
+#         id=f"{SOURCE_NAME}:{_get_id(site)}",
+#         name=site["attributes"]["name"],
+#         address=_get_address(site),
+#         location=try_get_lat_long(site),
+#         contact=_get_contacts(site),
+#         languages=None,
+#         opening_dates=_get_opening_dates(site),
+#         opening_hours=_get_opening_hours(site),
+#         availability=_get_availability(site),
+#         inventory=None,
+#         access=_get_access(site),
+#         parent_organization=None,
+#         links=None,  # TODO
+#         notes=_get_notes(site),
+#         active=_get_active(site),
+#         source=schema.Source(
+#             source=SOURCE_NAME,
+#             id=site["attributes"]["GlobalID"],
+#             fetched_from_uri="https://services.arcgis.com/8ZpVMShClf8U8dae/arcgis/rest/services/Covid19_Vaccination_Locations/FeatureServer/0",  # noqa: E501
+#             fetched_at=timestamp,
+#             published_at=_get_published_at(site),
+#             data=site,
+#         ),
+#     )
 
 
 output_dir = pathlib.Path(sys.argv[1])
