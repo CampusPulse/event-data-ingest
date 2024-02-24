@@ -12,7 +12,7 @@ import urllib.parse
 from typing import List
 
 import yaml
-from vaccine_feed_ingest_schema import location as schema
+from campuspulse_event_ingest_schema import location as schema
 
 # Configure logger
 logging.basicConfig(

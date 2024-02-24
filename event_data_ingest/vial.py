@@ -11,7 +11,7 @@
 # import rtree
 # import shapely.geometry
 # import urllib3
-# from vaccine_feed_ingest_schema import load
+# from campuspulse_event_ingest_schema import load
 
 # from event_data_ingest.utils.log import getLogger
 

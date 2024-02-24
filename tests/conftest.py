@@ -1,5 +1,5 @@
 import pytest
-from vaccine_feed_ingest_schema import location
+from campuspulse_event_ingest_schema import location
 
 
 @pytest.fixture

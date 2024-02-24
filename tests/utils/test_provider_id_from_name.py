@@ -1,4 +1,4 @@
-from vaccine_feed_ingest_schema.location import VaccineProvider
+from campuspulse_event_ingest_schema.location import VaccineProvider
 
 from event_data_ingest.utils.normalize import provider_id_from_name
 

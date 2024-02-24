@@ -1,4 +1,4 @@
-from vaccine_feed_ingest_schema import location
+from campuspulse_event_ingest_schema import location
 
 from event_data_ingest.utils import match
 

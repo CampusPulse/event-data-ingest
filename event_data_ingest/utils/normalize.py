@@ -9,8 +9,8 @@ import orjson
 import phonenumbers
 import url_normalize
 import usaddress
-from vaccine_feed_ingest_schema import location
-from vaccine_feed_ingest_schema.location import VaccineProvider
+from campuspulse_event_ingest_schema import location
+from campuspulse_event_ingest_schema.location import VaccineProvider
 
 from .log import getLogger
 

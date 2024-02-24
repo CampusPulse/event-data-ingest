@@ -16,7 +16,7 @@ import pydantic
 import us
 import usaddress
 from opening_hours import OpeningHours
-from vaccine_feed_ingest_schema import location as schema
+from campuspulse_event_ingest_schema import location as schema
 
 from event_data_ingest.utils.log import getLogger
 from event_data_ingest.utils.normalize import (
