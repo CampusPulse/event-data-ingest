@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "housing-data-ingest"
+name = "event-data-ingest"
 version = "0.1.0"
 description = "Pipeline for ingesting nationwide feed of vaccine facilities"
 authors = ["Bryan Culbertson <bryan.culbertson@gmail.com>"]
