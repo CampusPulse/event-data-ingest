@@ -73,6 +73,10 @@ for link in links:
 		continue
 	url = f"{base_url.geturl()}{link}"
 	response = requests.get(url, allow_redirects=True, headers=headers)
+
+	if response.status_code > 299:
+		print(f"\t error. HTTP status {response.status_code}")
+
 	content = response.text
 	
 	with open(outpath, "w") as f:
