@@ -146,11 +146,28 @@ if __name__ == "__main__":
             
 
             starttime = date + " " + timerange[0] if not is_all_day else None
-            endtime = date + " " + timerange[1] if not is_all_day else None
+            endtime = date + " " + timerange[1] if not is_all_day and len(timerange) >= 2 else None
+           
+           
+            starttime = starttime if not is_all_day else date
+            try:
+                starttime = dateparser.parse(starttime)
+            except ParserError:
+                # the parsing of the datetime failed, just include it as a string
+                print(f"parsing of datetime value {starttime} failed, falling back to just including the value (its the normalizers problem now)")
+                pass
 
-            starttime = dateparser.parse(starttime) if not is_all_day else dateparser.parse(date)
             print(f"processing event starting at: {starttime} - {name}")
-            endtime = dateparser.parse(endtime) if not is_all_day else None
+            print(items)
+            endtime = endtime if not is_all_day else None
+            if endtime is not None:
+                try:
+                    endtime =dateparser.parse(endtime) 
+                except ParserError:
+                    # the parsing of the datetime failed, just include it as a string
+                    print(f"parsing of datetime value {starttime} failed, falling back to just including the value (its the normalizers problem now)")
+                    pass
+            
             
 
             building = items[2].get_text().strip() if len(items) >= 3 else None 
