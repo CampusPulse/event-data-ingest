@@ -60,6 +60,10 @@ links = [a.get('href') for a in links]
 
 for link in links:
 	print(f"getting event {link}")
+	if not link.startswith("/events"):
+		print(f"link {link} isnt in the right format, skipping")
+		# this basically happens for external links, including those to the /croatia/events page
+		continue
 	eventname = link.split('/')[-1]
 
 	outpath = outdir / f"event_{eventname}.html"
