@@ -158,8 +158,8 @@ if __name__ == "__main__":
             room = items[3] if len(items) >= 4 else None 
             room = room.get_text().split(":")[1].strip() if room is not None else ""
             # location = building + " - " + room
-            
-            occurrences.append((building, room, (is_all_day, starttime, endtime)))
+            location = None #addrees
+            occurrences.append((location, building, room, (is_all_day, starttime, endtime)))
             
         
         public = soup.find_all(string="Open to the Public")
