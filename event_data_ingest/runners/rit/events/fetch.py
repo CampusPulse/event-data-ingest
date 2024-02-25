@@ -33,7 +33,7 @@ while True:
 	response = requests.get(url, allow_redirects=False, headers=headers)
 	content = response.text
 
-	with open(outdir / "page_{page}.html", "w") as f:
+	with open(outdir / f"page_{page}.html", "w") as f:
 		f.write(content)
 
 	soup = BeautifulSoup(content, "html.parser")
@@ -60,7 +60,7 @@ links = [a.get('href') for a in links]
 
 for link in links:
 	print(f"getting event {link}")
-	outpath = outdir / "event_{eventname}.html"
+	outpath = outdir / f"event_{eventname}.html"
 
 	if outpath.exists():
 		print("\tskipping already scraped event")
