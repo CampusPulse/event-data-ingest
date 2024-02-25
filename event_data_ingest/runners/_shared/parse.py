@@ -5,6 +5,8 @@
 #
 
 import json
+from json import JSONEncoder
+import datetime
 import os
 import pathlib
 import re
@@ -13,7 +15,7 @@ from typing import Dict, List
 
 import yaml
 from bs4 import BeautifulSoup
-from ics import Calendar, Event
+from icalendar import Calendar, Event
 
 
 from event_data_ingest.utils.log import getLogger
@@ -104,10 +106,14 @@ def _log_activity(
     )
 
 
-def _output_ndjson(json_list: List[dict], out_filepath: pathlib.Path) -> None:
+def _output_ndjson(json_list: List[dict], out_filepath: pathlib.Path, dump_cls=None) -> None:
     with out_filepath.open("w") as fout:
         for obj in json_list:
-            json.dump(obj, fout)
+            if dump_cls is not None:
+                json.dump(obj, fout, cls=dump_cls)
+            else:
+                json.dump(obj, fout)
+
             fout.write("\n")
 
 
@@ -132,24 +138,36 @@ if config["parser"] == "ics":
         if not ics.is_file():
             continue
         
-        events = []
+
+        filedata = ics.read_text()
+
+        class ICalendarEncoder(JSONEncoder):
+            def default(self, obj, markers=None):
+                try:
+                    if obj.__module__.startswith("icalendar.prop"):#"ics"):
+                        return (obj.to_ical())
+                except AttributeError:
+                    pass
+
+                if isinstance(obj, datetime.datetime):
+                    return (obj.now().strftime('%Y-%m-%dT%H:%M:%S'))
+
+                if isinstance(obj, bytes):
+                    return (obj.decode("utf-8"))
+
+                return JSONEncoder.default(self,obj)    
 
 
-        c = Calendar(ics.read_text())
-        for event in c.events:
-            print(event)
-    
+        cal = Calendar.from_ical(filedata)
+
+        events = list(cal.walk(name="VEVENT"))
         
-        # for result in soupify_file(html).find_all("div", class_="view-rates"):
-        #     data.extend(
-        #         [extract_room_info(result)]
-        #     )
 
         out_filepath = _get_out_filepath(ics, OUTPUT_DIR)
 
         _log_activity(config["state"], config["site"], ics, out_filepath)
 
-        _output_ndjson(events, out_filepath)
+        _output_ndjson(events, out_filepath, dump_cls=ICalendarEncoder)
 
 elif config["parser"] == "passthrough":
     """
