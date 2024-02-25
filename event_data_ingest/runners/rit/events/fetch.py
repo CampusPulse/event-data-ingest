@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import os
-import pathlib
+from pathlib import Path
 import sys
 import urllib.parse
 
@@ -20,6 +20,11 @@ base_url = urllib.parse.urlparse("https://www.rit.edu/events/")
 headers = {}
 extra_params = {}
 page = 0
+
+pages_outdir = Path(os.path.join(output_dir, f"pages"))
+pages_outdir.mkdir()
+
+
 while True:
 	
 	params = urllib.parse.urlencode({"page": page})
@@ -27,7 +32,7 @@ while True:
 	response = requests.get(url, allow_redirects=False, headers=headers)
 	content = response.text
 
-	with open(os.path.join(output_dir, f"{page}.html"), "w") as f:
+	with open(pages_outdir / "{page}.html", "w") as f:
 		f.write(content)
 
 	soup = BeautifulSoup(content, "html.parser")
