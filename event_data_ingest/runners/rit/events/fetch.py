@@ -81,6 +81,9 @@ for link in links:
 		continue
 
 	content = response.text
+	soup = BeautifulSoup(content, "html.parser")
+
+	content = str(soup.find("main"))
 	
 	with open(outpath, "w") as f:
 		f.write(content)
