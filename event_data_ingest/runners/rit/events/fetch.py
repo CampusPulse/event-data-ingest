@@ -72,11 +72,13 @@ for link in links:
 		print("\tskipping already scraped event")
 		continue
 
-	url = f"{base_url.geturl()}{link}"
+	url = f"{base_url.geturl()}{eventname}"
+
 	response = requests.get(url, allow_redirects=True, headers=headers)
 
 	if response.status_code > 299:
-		print(f"\t error. HTTP status {response.status_code}")
+		print(f"\t error. HTTP status {response.status_code} for url {url}")
+		continue
 
 	content = response.text
 	
