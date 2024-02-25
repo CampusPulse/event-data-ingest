@@ -147,7 +147,7 @@ if __name__ == "__main__":
             endtime = date + " " + timerange[1]
 
             starttime = dateparser.parse(starttime)
-            print("processing event starting at:", starttime)
+            print(f"processing event starting at: {starttime} - {name}")
             endtime = dateparser.parse(endtime)
             
 
