@@ -118,7 +118,12 @@ if __name__ == "__main__":
         soup = BeautifulSoup(filedata, features="html.parser")
 
         # parse details that are the same for every event
-        name = soup.find(attrs={'class': "field--name-title"}).get_text().strip()
+        name_attr = soup.find(attrs={'class': "field--name-title"})
+        name_children = list(name_attr.children)
+        name = name_children[0].get_text().strip()
+
+        link = name_children[-1].get_text().strip() if len(name_children) > 1 else None
+
         description = soup.find(attrs={'class': "field--name-field-event-description"}).get_text().strip()
 
         occurrences = []
