@@ -71,6 +71,7 @@ for link in links:
 	if outpath.exists():
 		print("\tskipping already scraped event")
 		continue
+
 	url = f"{base_url.geturl()}{link}"
 	response = requests.get(url, allow_redirects=True, headers=headers)
 

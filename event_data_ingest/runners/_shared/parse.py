@@ -144,7 +144,7 @@ if config["parser"] == "ics":
         class ICalendarEncoder(JSONEncoder):
             def default(self, obj, markers=None):
                 try:
-                    if obj.__module__.startswith("icalendar.prop"):#"ics"):
+                    if obj.__module__.startswith("icalendar.prop"):
                         return (obj.to_ical())
                 except AttributeError:
                     pass
