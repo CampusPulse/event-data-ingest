@@ -7,12 +7,13 @@
 
 import json
 import pathlib
+import datetime
 import re
 import sys
 from typing import Dict, List
+from json import JSONEncoder
 
-
-from ics import Calendar, Event
+from icalendar import Calendar, Event
 
 # ALLOWED_NORMALIZED_COLUMNS = {"clinic", "slots", "type", "address", "hours"}
 
@@ -106,48 +107,18 @@ if __name__ == "__main__":
     for ics in input_dir.glob("**/*.ics"):
         if not ics.is_file():
             continue
-        
-        # rewrite file to replace CRLF CATEGORIES; with , to fix parsing
-        
+                
         filedata = ics.read_text()
 
-        # filedata = filedata[:2400]
 
-        lastindex = 0 
-        index = filedata.find("CATEGORIES;")
-        while index != -1:
             
-            # length = index-lastindex
-            newlinecount = filedata[lastindex:index+1].count("\n")
-            # eol = filedata.find("\n",index)
-
-            if newlinecount == 1:
-                # we just saw a categories line in the last line
-                # lets extend the end of this block to grab all categories for this event
-
-                endblockindex = filedata.find("CATEGORIES;", index+len("CATEGORIES;"))
-                # as long as the new proposed block end changes the number of newlines in the block by at most 2, consider it acceptable to extend the block
-                while filedata[lastindex:endblockindex].count("\n") - filedata[lastindex:index].count("\n") < 2:
-                    index = endblockindex
-                    # set up for next iteration
-                    endblockindex = filedata.find("CATEGORIES;", index+len("CATEGORIES;"))
-
-                #at this point the next line outside the block contains the last categories line, so grab it.
-                index = filedata.find("\n", index)
                 
 
-                categoriesblock = filedata[lastindex:index]
             
 
     
-                # Update the string to extend the previous line
-                categoriesblock = categoriesblock.replace("\nCATEGORIES;", ",")
 
-                filedata = filedata[:lastindex] + categoriesblock + filedata[index:]
 
-            # Find the next occurrence of "CATEGORIES;"
-            lastindex = index
-            index = filedata.find("CATEGORIES;", lastindex+len("CATEGORIES;"))
         
     
         events = []
