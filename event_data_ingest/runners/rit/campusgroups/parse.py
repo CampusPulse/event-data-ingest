@@ -123,7 +123,6 @@ if __name__ == "__main__":
                     return (obj.now().strftime('%Y-%m-%dT%H:%M:%S'))
 
                 if isinstance(obj, bytes):
-                    print(obj)
                     return (obj.decode("utf-8"))
 
                 return JSONEncoder.default(self,obj)    
