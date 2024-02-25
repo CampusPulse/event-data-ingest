@@ -60,7 +60,7 @@ links = [a.get('href') for a in links]
 
 for link in links:
 	print(f"getting event {link}")
-	outpath = outpath / "event_{eventname}.html"
+	outpath = outdir / "event_{eventname}.html"
 
 	if outpath.exists():
 		print("\tskipping already scraped event")
