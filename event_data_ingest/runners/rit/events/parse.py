@@ -143,15 +143,17 @@ if __name__ == "__main__":
             is_all_day = "All Day" in timerange.strip()
             timerange = timerange.split("-")
 
-            starttime = date + " " + timerange[0]
-            endtime = date + " " + timerange[1]
-
-            starttime = dateparser.parse(starttime)
-            print(f"processing event starting at: {starttime} - {name}")
-            endtime = dateparser.parse(endtime)
             
 
-            building = items[2].get_text().strip()
+            starttime = date + " " + timerange[0] if not is_all_day else None
+            endtime = date + " " + timerange[1] if not is_all_day else None
+
+            starttime = dateparser.parse(starttime) if not is_all_day else dateparser.parse(date)
+            print(f"processing event starting at: {starttime} - {name}")
+            endtime = dateparser.parse(endtime) if not is_all_day else None
+            
+
+            building = items[2].get_text().strip() if len(items) >= 3 else None 
             
             room = items[3] if len(items) >= 4 else None 
             room = room.get_text().split(":")[1].strip() if room is not None else ""
