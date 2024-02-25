@@ -60,6 +60,8 @@ links = [a.get('href') for a in links]
 
 for link in links:
 	print(f"getting event {link}")
+	eventname = link.split('/')[-1]
+
 	outpath = outdir / f"event_{eventname}.html"
 
 	if outpath.exists():
@@ -67,7 +69,6 @@ for link in links:
 		continue
 	url = f"{base_url.geturl()}{link}"
 	response = requests.get(url, allow_redirects=False, headers=headers)
-	eventname = link.split('/')[-1]
 	content = response.text
 	
 	with open(outpath, "w") as f:
