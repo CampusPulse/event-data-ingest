@@ -131,7 +131,12 @@ if __name__ == "__main__":
         cal = Calendar.from_ical(filedata)
 
         events = list(cal.walk(name="VEVENT"))
-        # TODO: possibly preserve the attributes on the categories, since theres like an X-CG header or something on it
+
+        for event in events:
+            for c in event["CATEGORIES"]:
+                cg_category_type = c.params["X-CG-CATEGORY"]
+                event[cg_category_type] = c.cats
+            del event["CATEGORIES"]
 
         output = "\n".join(json.dumps(event, cls=ICalendarEncoder) for event in events)
         outpath = output_dir / (ics.with_suffix(".parsed.ndjson").name)
