@@ -72,7 +72,7 @@ for link in links:
 		print("\tskipping already scraped event")
 		continue
 	url = f"{base_url.geturl()}{link}"
-	response = requests.get(url, allow_redirects=False, headers=headers)
+	response = requests.get(url, allow_redirects=True, headers=headers)
 	content = response.text
 	
 	with open(outpath, "w") as f:
