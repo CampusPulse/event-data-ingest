@@ -51,3 +51,29 @@ while True:
 
 with open(os.path.join(output_dir, f"upcomingevents-combined.html"), "w") as f:
 	f.write(output)
+
+
+soup = BeautifulSoup(output, "html.parser")
+
+links = soup.find_all("a")
+print(links)
+links = [a.get('href') for a in links]
+
+
+events_outdir = Path(os.path.join(output_dir, f"events"))
+events_outdir.mkdir()
+
+for link in links:
+	print(f"getting event {link}")
+	outpath = events_outdir / "{eventname}.html"
+
+	if outpath.exists():
+		print("\tskipping already scraped event")
+		continue
+	url = f"{base_url.geturl()}{link}"
+	response = requests.get(url, allow_redirects=False, headers=headers)
+	eventname = link.split('/')[-1]
+	content = response.text
+	
+	with open(outpath, "w") as f:
+		f.write(content)
