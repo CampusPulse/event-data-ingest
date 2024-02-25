@@ -175,6 +175,10 @@ if __name__ == "__main__":
         contact_phone = soup.find(attrs={'class': "field--name-field-contact-phone"})
 
 
+        topics = soup.find(attrs={'class': "field--name-field-event-general-topics"})
+        topics = [e.string for e in topics.find_all(attrs={'class': "field__item"})]
+
+
     
         # e = Event()
         # e.name = name
