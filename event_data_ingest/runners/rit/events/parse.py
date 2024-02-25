@@ -172,6 +172,7 @@ if __name__ == "__main__":
 
         contact_name = soup.find(attrs={'class': "field--name-field-contact-name"})
         contact_email = soup.find(attrs={'class': "field--name-field-contact-email"})
+        contact_phone = soup.find(attrs={'class': "field--name-field-contact-phone"})
 
 
     
