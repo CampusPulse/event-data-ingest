@@ -20,6 +20,8 @@ base_url = urllib.parse.urlparse("https://www.rit.edu/events/")
 headers = {}
 extra_params = {}
 page = 0
+output = ""
+
 
 pages_outdir = Path(os.path.join(output_dir, f"pages"))
 pages_outdir.mkdir()
@@ -36,8 +38,16 @@ while True:
 		f.write(content)
 
 	soup = BeautifulSoup(content, "html.parser")
+
+	upcoming = soup.find(id="views-bootstrap-event-display-upcoming-events")
+	# print(upcoming.text)
+	output += str(upcoming)
+
 	current_page = int(list(soup.find('a', title="Current page").children)[-1])
 	if current_page != (page + 1):
 		break
 	page += 1
-		
+
+
+with open(os.path.join(output_dir, f"upcomingevents-combined.html"), "w") as f:
+	f.write(output)
