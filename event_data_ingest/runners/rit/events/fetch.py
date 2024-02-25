@@ -28,7 +28,7 @@ pages_outdir.mkdir()
 
 
 while True:
-	
+	print(f"getting event page {page}")
 	params = urllib.parse.urlencode({"page": page})
 	url = f"{base_url.geturl()}?{params}"
 	response = requests.get(url, allow_redirects=False, headers=headers)
