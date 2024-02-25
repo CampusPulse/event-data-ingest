@@ -13,6 +13,7 @@ import sys
 from typing import Dict, List
 from json import JSONEncoder
 from dateutil import parser as dateparser
+from dateutil.parser import ParserError
 
 from icalendar import Calendar, Event
 from bs4 import BeautifulSoup
