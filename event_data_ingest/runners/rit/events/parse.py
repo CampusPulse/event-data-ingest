@@ -160,9 +160,17 @@ if __name__ == "__main__":
             occurrences.append((building, room, (is_all_day, starttime, endtime)))
             
         
-        otherdata = soup.find(attrs={'class': "paragraph--type--event-schedule"}).nextSibling
-        print(otherdata)
-            
+        public = soup.find_all(string="Open to the Public")
+        is_public = len(public) >= 1
+        
+        interp = soup.find(string="Interpreter Requested?")
+        print(str(interp))
+        print(str(interp.next_sibling))
+        interp_status = interp.next_sibling.text if interp.next_sibling else None
+
+        contact_name = soup.find(attrs={'class': "field--name-field-contact-name"})
+        contact_email = soup.find(attrs={'class': "field--name-field-contact-email"})
+
 
     
         # e = Event()
