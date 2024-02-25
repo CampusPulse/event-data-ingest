@@ -23,8 +23,7 @@ page = 0
 output = ""
 
 
-pages_outdir = Path(os.path.join(output_dir, f"pages"))
-pages_outdir.mkdir()
+outdir = Path(output_dir)
 
 
 while True:
@@ -34,7 +33,7 @@ while True:
 	response = requests.get(url, allow_redirects=False, headers=headers)
 	content = response.text
 
-	with open(pages_outdir / "{page}.html", "w") as f:
+	with open(outdir / "page_{page}.html", "w") as f:
 		f.write(content)
 
 	soup = BeautifulSoup(content, "html.parser")
@@ -59,13 +58,9 @@ links = soup.find_all("a")
 print(links)
 links = [a.get('href') for a in links]
 
-
-events_outdir = Path(os.path.join(output_dir, f"events"))
-events_outdir.mkdir()
-
 for link in links:
 	print(f"getting event {link}")
-	outpath = events_outdir / "{eventname}.html"
+	outpath = outpath / "event_{eventname}.html"
 
 	if outpath.exists():
 		print("\tskipping already scraped event")
