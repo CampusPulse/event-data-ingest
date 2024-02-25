@@ -10,7 +10,7 @@ from typing import Collection, Optional
 import orjson
 import pydantic
 from sentry_sdk import set_tag
-# from rit_housing_data_schema import apartment
+import campuspulse_event_ingest_schema as schema 
 
 from event_data_ingest.utils.log import getLogger
 
@@ -435,59 +435,59 @@ def _validate_parsed(output_dir: pathlib.Path) -> bool:
     return True
 
 
-# def _validate_normalized(output_dir: pathlib.Path) -> bool:
-#     """Validate output files are valid normalized apartments."""
-#     for filepath in outputs.iter_data_paths(
-#         output_dir, suffix=STAGE_OUTPUT_SUFFIX[PipelineStage.NORMALIZE]
-#     ):
-#         with filepath.open(mode="rb") as ndjson_file:
-#             for line_no, content in enumerate(ndjson_file, start=1):
-#                 if len(content) > MAX_NORMALIZED_RECORD_SIZE:
-#                     logger.warning(len(content))
-#                     logger.warning(
-#                         "Source apartment too large to process in %s at line %d: %s",
-#                         filepath,
-#                         line_no,
-#                         content,
-#                     )
-#                     return False
+def _validate_normalized(output_dir: pathlib.Path) -> bool:
+    """Validate output files are valid normalized apartments."""
+    for filepath in outputs.iter_data_paths(
+        output_dir, suffix=STAGE_OUTPUT_SUFFIX[PipelineStage.NORMALIZE]
+    ):
+        with filepath.open(mode="rb") as ndjson_file:
+            for line_no, content in enumerate(ndjson_file, start=1):
+                if len(content) > MAX_NORMALIZED_RECORD_SIZE:
+                    logger.warning(len(content))
+                    logger.warning(
+                        "Source data too large to process in %s at line %d: %s",
+                        filepath,
+                        line_no,
+                        content,
+                    )
+                    return False
 
-#                 try:
-#                     content_dict = orjson.loads(content)
-#                 except json.JSONDecodeError:
-#                     logger.warning(
-#                         "Invalid json record in %s at line %d: %s",
-#                         filepath,
-#                         line_no,
-#                         content,
-#                     )
-#                     return False
+                try:
+                    content_dict = orjson.loads(content)
+                except json.JSONDecodeError:
+                    logger.warning(
+                        "Invalid json record in %s at line %d: %s",
+                        filepath,
+                        line_no,
+                        content,
+                    )
+                    return False
 
-#                 try:
-#                     normalized_aptcomplex = apartment.NormalizedApartmentComplex.parse_obj(
-#                         content_dict
-#                     )
-#                 except pydantic.ValidationError as e:
-#                     logger.warning(
-#                         "Invalid source apartment in %s at line %d: %s\n%s",
-#                         filepath,
-#                         line_no,
-#                         content[:100],
-#                         str(e),
-#                     )
-#                     return False
+                try:
+                    normalized_aptcomplex = schema.NormalizedEvent.parse_obj(
+                        content_dict
+                    )
+                except pydantic.ValidationError as e:
+                    logger.warning(
+                        "Invalid source event in %s at line %d: %s\n%s",
+                        filepath,
+                        line_no,
+                        content[:100],
+                        str(e),
+                    )
+                    return False
 
-                # if normalized_aptcomplex.location:
-                #     if not VACCINATE_THE_STATES_BOUNDARY.contains(
-                #         normalized_aptcomplex.location
-                #     ):
-                #         logger.warning(
-                #             "Invalid latitude or longitude in %s at line %d: %s is outside approved bounds (%s)",
-                #             filepath,
-                #             line_no,
-                #             normalized_aptcomplex.location,
-                #             VACCINATE_THE_STATES_BOUNDARY,
-                #         )
-                #         return False
+                if normalized_aptcomplex.location:
+                    if not VACCINATE_THE_STATES_BOUNDARY.contains(
+                        normalized_aptcomplex.location
+                    ):
+                        logger.warning(
+                            "Invalid latitude or longitude in %s at line %d: %s is outside approved bounds (%s)",
+                            filepath,
+                            line_no,
+                            normalized_aptcomplex.location,
+                            VACCINATE_THE_STATES_BOUNDARY,
+                        )
+                        return False
 
     return True
