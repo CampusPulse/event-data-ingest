@@ -110,29 +110,30 @@ if __name__ == "__main__":
                 
         filedata = ics.read_text()
 
+        class ICalendarEncoder(JSONEncoder):
+            def default(self, obj, markers=None):
 
-            
-                
+                try:
+                    if obj.__module__.startswith("icalendar.prop"):#"ics"):
+                        return (obj.to_ical())
+                except AttributeError:
+                    pass
 
-            
+                if isinstance(obj, datetime.datetime):
+                    return (obj.now().strftime('%Y-%m-%dT%H:%M:%S'))
 
-    
+                if isinstance(obj, bytes):
+                    print(obj)
+                    return (obj.decode("utf-8"))
 
-
-        
-    
-        events = []
-        c = Calendar(filedata)
-        for event in c.events:
-            # print(event)
-            print("---")
-            for category in event.categories:
-                print(category)
-
-        # TODO: make JSON
+                return JSONEncoder.default(self,obj)    
 
 
-        output = "\n".join(json.dumps(event) for event in events)
+        cal = Calendar.from_ical(filedata)
+
+        events = list(cal.walk(name="VEVENT"))
+
+        output = "\n".join(json.dumps(event, cls=ICalendarEncoder) for event in events)
         outpath = output_dir / (ics.with_suffix(".parsed.ndjson").name)
         with open(outpath, "w") as fd:
             fd.write(output)
