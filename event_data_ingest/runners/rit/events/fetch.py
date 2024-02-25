@@ -21,8 +21,7 @@ headers = {}
 extra_params = {}
 page = 0
 while True:
-
-	print("loop")
+	
 	params = urllib.parse.urlencode({"page": page})
 	url = f"{base_url.geturl()}?{params}"
 	response = requests.get(url, allow_redirects=False, headers=headers)
