@@ -159,7 +159,6 @@ if __name__ == "__main__":
                 pass
 
             print(f"processing event starting at: {starttime} - {name}")
-            print(items)
             endtime = endtime if not is_all_day else None
             if endtime is not None:
                 try:
