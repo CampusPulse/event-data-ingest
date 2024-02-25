@@ -140,6 +140,7 @@ if __name__ == "__main__":
 
             date = items[0].get_text()
             timerange = items[1].get_text()
+            is_all_day = "All Day" in timerange.strip()
             timerange = timerange.split("-")
 
             starttime = date + " " + timerange[0]
@@ -156,7 +157,7 @@ if __name__ == "__main__":
             room = room.get_text().split(":")[1].strip() if room is not None else ""
             # location = building + " - " + room
             
-            occurrences.append((building, room, starttime, endtime))
+            occurrences.append((building, room, (is_all_day, starttime, endtime)))
             
         
         otherdata = soup.find(attrs={'class': "paragraph--type--event-schedule"}).nextSibling
