@@ -193,7 +193,7 @@ if __name__ == "__main__":
 
 
         topics = soup.find(attrs={'class': "field--name-field-event-general-topics"})
-        topics = [e.string for e in topics.find_all(attrs={'class': "field__item"})]
+        topics = [e.string for e in topics.find_all(attrs={'class': "field__item"})] if topics else []
 
 
     
