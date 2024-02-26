@@ -17,6 +17,8 @@ import us
 import usaddress
 import campuspulse_event_ingest_schema  as schema
 from dateutil import parser as dateparser
+from dateutil.tz import gettz
+
 from event_data_ingest.utils.log import getLogger
 # from event_data_ingest.utils.normalize import (
 #     normalize_address,
@@ -366,8 +368,8 @@ def _get_normalized_event(site: dict, timestamp: str) -> schema.NormalizedEvent:
         location = _parse_location(site),#: Optional[Location]
         # date = ,#: Optional[StringDate]
         # isAllDay = site.get("allDay"),#: Optional[bool]
-        start = dateparser.parse(site.get("DTSTART")),#: Optional[StringTime]
-        end = dateparser.parse(site.get("DTEND")),#: Optional[StringTime]
+        start = dateparser.parse(site.get("DTSTART")).replace(tzinfo=None),#: Optional[StringTime]
+        end = dateparser.parse(site.get("DTEND")).replace(tzinfo=None),#: Optional[StringTime]
         # duration = ,#: Optional[StringTime]
         description = site.get("DESCRIPTION"),#: Optional[str]
         # host = ,#: Optional[str]
