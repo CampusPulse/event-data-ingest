@@ -477,17 +477,4 @@ def _validate_normalized(output_dir: pathlib.Path) -> bool:
                     )
                     return False
 
-                if normalized_aptcomplex.location:
-                    if not VACCINATE_THE_STATES_BOUNDARY.contains(
-                        normalized_aptcomplex.location
-                    ):
-                        logger.warning(
-                            "Invalid latitude or longitude in %s at line %d: %s is outside approved bounds (%s)",
-                            filepath,
-                            line_no,
-                            normalized_aptcomplex.location,
-                            VACCINATE_THE_STATES_BOUNDARY,
-                        )
-                        return False
-
     return True
