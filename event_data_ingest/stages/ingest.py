@@ -464,7 +464,7 @@ def _validate_normalized(output_dir: pathlib.Path) -> bool:
                     return False
 
                 try:
-                    normalized_aptcomplex = schema.NormalizedEvent.parse_obj(
+                    normalized_data = schema.NormalizedEvent.parse_obj(
                         content_dict
                     )
                 except pydantic.ValidationError as e:
