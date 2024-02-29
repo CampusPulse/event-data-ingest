@@ -123,7 +123,7 @@ if __name__ == "__main__":
         name_children = list(name_attr.children)
         name = name_children[0].get_text().strip()
 
-        link = name_children[-1].get_text().strip() if len(name_children) > 1 else None
+        title_link = name_children[-1].get_text().strip() if len(name_children) > 1 else None
 
         description = soup.find(attrs={'class': "field--name-field-event-description"}).get_text().strip()
 
@@ -228,7 +228,7 @@ if __name__ == "__main__":
         e = {}
 
         e["name"] = name
-        e["link"] = link
+        e["title_link"] = title_link
         e["description"] = description
         e["ical_link"] = ical_link
         e["node_id"] = node_id
