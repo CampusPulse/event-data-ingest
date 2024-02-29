@@ -135,6 +135,8 @@ if __name__ == "__main__":
         node_id = ical_link_attr["href"].split("/")[1]
 
         occurrences = []
+        print(f"processing event: {name}")
+
         # potentially multiple event times
         for event_html in soup.find_all(attrs={'class': "paragraph--type--event-schedule"}):
 
@@ -165,7 +167,7 @@ if __name__ == "__main__":
                 print(f"parsing of datetime value {starttime} failed, falling back to just including the value (its the normalizers problem now)")
                 pass
 
-            print(f"processing event starting at: {starttime} - {name}")
+            print(f"\tprocessing event occurrence starting at: {starttime}")
             endtime = endtime if not is_all_day else None
             if endtime is not None:
                 try:
