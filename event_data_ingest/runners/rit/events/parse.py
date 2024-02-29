@@ -152,7 +152,7 @@ if __name__ == "__main__":
            
             starttime = starttime if not is_all_day else date
             try:
-                starttime = dateparser.parse(starttime)
+                starttime = dateparser.parse(starttime).isoformat()
             except ParserError:
                 # the parsing of the datetime failed, just include it as a string
                 print(f"parsing of datetime value {starttime} failed, falling back to just including the value (its the normalizers problem now)")
@@ -162,7 +162,7 @@ if __name__ == "__main__":
             endtime = endtime if not is_all_day else None
             if endtime is not None:
                 try:
-                    endtime =dateparser.parse(endtime) 
+                    endtime = dateparser.parse(endtime).isoformat()
                 except ParserError:
                     # the parsing of the datetime failed, just include it as a string
                     print(f"parsing of datetime value {starttime} failed, falling back to just including the value (its the normalizers problem now)")
@@ -188,8 +188,14 @@ if __name__ == "__main__":
         interp_status = interp.next_sibling.text if interp.next_sibling else None
 
         contact_name = soup.find(attrs={'class': "field--name-field-contact-name"})
+        contact_name = contact_name.get_text() if contact_name else None
+
         contact_email = soup.find(attrs={'class': "field--name-field-contact-email"})
+        contact_email = contact_email.get_text() if contact_email else None
+
         contact_phone = soup.find(attrs={'class': "field--name-field-contact-phone"})
+        contact_phone = contact_phone.get_text() if contact_phone else None
+
 
 
         topics = soup.find(attrs={'class': "field--name-field-event-general-topics"})
