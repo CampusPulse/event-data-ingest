@@ -204,7 +204,24 @@ if __name__ == "__main__":
         # e.end = tz.localize(endtime)
         # e.location = building
         # events.append(e)
-            
+
+        e = {}
+
+        e["name"] = name
+        e["link"] = link
+        e["description"] = description
+        # e["begin"] = tz.localize(starttime)
+        # e["end"] = tz.localize(endtime)
+        e["occurrences"] = occurrences
+        # e["location"] = building
+        e["is_public"] = is_public
+        e["interp"] = interp
+        e["contact_name"] = contact_name
+        e["contact_email"] = contact_email
+        e["contact_phone"] = contact_phone
+        e["topics"] = topics
+
+        events.append(e)
 
     output = "\n".join(json.dumps(event) for event in events)
     outpath = output_dir / (html.with_suffix(".parsed.ndjson").name)
