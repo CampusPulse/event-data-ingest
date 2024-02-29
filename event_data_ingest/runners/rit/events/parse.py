@@ -245,7 +245,7 @@ if __name__ == "__main__":
         e["occurrences"] = occurrences
         # e["location"] = building
         e["is_public"] = is_public
-        e["interp"] = interp
+        e["interpereter"] = interp_status
         e["contact_name"] = contact_name
         e["contact_email"] = contact_email
         e["contact_phone"] = contact_phone
