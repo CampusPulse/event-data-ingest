@@ -4,7 +4,7 @@
 # Parse stage should convert raw data into json records and store as ndjson.
 #
 
-
+import re
 import json
 import pathlib
 import datetime
@@ -127,6 +127,13 @@ if __name__ == "__main__":
 
         description = soup.find(attrs={'class': "field--name-field-event-description"}).get_text().strip()
 
+        ical_link_attr = soup.find("a", string=re.compile("\w*Add to Calendar\w*"))
+        #attrs={'href': "node/*/calendar.ics"})#
+        # print(ical_link_attr)
+        # ical_link_attr = ical_link_attr
+        ical_link = "https://rit.edu/events/" + ical_link_attr["href"]
+        node_id = ical_link_attr["href"].split("/")[1]
+
         occurrences = []
         # potentially multiple event times
         for event_html in soup.find_all(attrs={'class': "paragraph--type--event-schedule"}):
@@ -221,6 +228,8 @@ if __name__ == "__main__":
         e["name"] = name
         e["link"] = link
         e["description"] = description
+        e["ical_link"] = ical_link
+        e["node_id"] = node_id
         # e["begin"] = tz.localize(starttime)
         # e["end"] = tz.localize(endtime)
         e["occurrences"] = occurrences
