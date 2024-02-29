@@ -17,7 +17,7 @@ from dateutil.parser import ParserError
 
 from icalendar import Calendar, Event
 from bs4 import BeautifulSoup
-
+from urllib.parse import urlparse, parse_qs
 
 # ALLOWED_NORMALIZED_COLUMNS = {"clinic", "slots", "type", "address", "hours"}
 
@@ -134,6 +134,15 @@ if __name__ == "__main__":
         ical_link = "https://rit.edu/events/" + ical_link_attr["href"]
         node_id = ical_link_attr["href"].split("/")[1]
 
+
+        event_link_attr = soup.find(attrs={"class": "fa-reddit"}).parent
+
+        event_link_attr = event_link_attr["href"] if event_link_attr is not None else None
+        event_link_attr = urlparse(event_link_attr) if event_link_attr is not None else None
+        event_link_attr = parse_qs(event_link_attr.query) if event_link_attr is not None else None
+
+        event_link = event_link_attr["url"][0] if event_link_attr is not None else None
+
         occurrences = []
         print(f"processing event: {name}")
 
@@ -231,6 +240,7 @@ if __name__ == "__main__":
         e["title_link"] = title_link
         e["description"] = description
         e["ical_link"] = ical_link
+        e["event_link"] = event_link
         e["node_id"] = node_id
         # e["begin"] = tz.localize(starttime)
         # e["end"] = tz.localize(endtime)
