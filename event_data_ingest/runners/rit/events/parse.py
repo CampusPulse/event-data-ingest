@@ -176,7 +176,14 @@ if __name__ == "__main__":
             room = room.get_text().split(":")[1].strip() if room is not None else ""
             # location = building + " - " + room
             location = None #addrees
-            occurrences.append((location, building, room, (is_all_day, starttime, endtime)))
+            occurrences.append({
+                'location': location,
+                'building': building,
+                'room': room,
+                'is_all_day': is_all_day,
+                'starttime': starttime,
+                'endtime': endtime
+            })
             
         
         public = soup.find_all(string="Open to the Public")
