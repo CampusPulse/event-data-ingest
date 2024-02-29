@@ -183,8 +183,6 @@ if __name__ == "__main__":
         is_public = len(public) >= 1
         
         interp = soup.find(string="Interpreter Requested?")
-        print(str(interp))
-        print(str(interp.next_sibling))
         interp_status = interp.next_sibling.text if interp.next_sibling else None
 
         contact_name = soup.find(attrs={'class': "field--name-field-contact-name"})
