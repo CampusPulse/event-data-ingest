@@ -206,7 +206,7 @@ if __name__ == "__main__":
         # events.append(e)
             
 
-        output = "\n".join(json.dumps(event) for event in events)
-        outpath = output_dir / (html.with_suffix(".parsed.ndjson").name)
-        with open(outpath, "w") as fd:
-            fd.write(output)
+    output = "\n".join(json.dumps(event) for event in events)
+    outpath = output_dir / (html.with_suffix(".parsed.ndjson").name)
+    with open(outpath, "w") as fd:
+        fd.write(output)
