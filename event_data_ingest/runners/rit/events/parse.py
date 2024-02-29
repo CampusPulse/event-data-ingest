@@ -144,8 +144,6 @@ if __name__ == "__main__":
         event_link = event_link_attr["url"][0] if event_link_attr is not None else None
 
         occurrences = []
-        print(f"processing event: {name}")
-
         # potentially multiple event times
         for event_html in soup.find_all(attrs={'class': "paragraph--type--event-schedule"}):
 
@@ -176,7 +174,6 @@ if __name__ == "__main__":
                 print(f"parsing of datetime value {starttime} failed, falling back to just including the value (its the normalizers problem now)")
                 pass
 
-            print(f"\tprocessing event occurrence starting at: {starttime}")
             endtime = endtime if not is_all_day else None
             if endtime is not None:
                 try:
@@ -202,7 +199,8 @@ if __name__ == "__main__":
                 'starttime': starttime,
                 'endtime': endtime
             })
-            
+        
+        print(f"processed {len(occurrences)} event occurrences for event: {name}")
         
         public = soup.find_all(string="Open to the Public")
         is_public = len(public) >= 1
