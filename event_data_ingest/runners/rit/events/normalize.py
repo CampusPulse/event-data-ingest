@@ -30,7 +30,7 @@ from event_data_ingest.utils.log import getLogger
 logger = getLogger(__file__)
 
 
-SOURCE_NAME = "rit_ehouse"
+SOURCE_NAME = "rit_events"
 
 
 class CustomBailError(Exception):
@@ -57,7 +57,7 @@ class CustomBailError(Exception):
 
 
 def _get_id(site: dict) -> str:
-    data_id = site["UID"]
+    data_id = site["node_id"]
 
     return f"{SOURCE_NAME}_{data_id}"
 
@@ -343,7 +343,7 @@ def apply_address_fixups(address: OrderedDict[str, str]) -> OrderedDict[str, str
 
 def _parse_location(site):
     try:
-        loc = site["LOCATION"]
+        loc = site.get("occurrences")[0]
     except Exception as e: 
         logger.info("Skipping parsing for one record due to exception")
         logger.warning(
@@ -355,33 +355,93 @@ def _parse_location(site):
         return None
 
     return schema.Location(
-        street=loc,
-        # city= city,
-        # state=state
+        # street=loc,
+        building= loc.get("building") or "" + (loc.get("room") if not loc.get("room").isnumeric() else ""),
+        room_number= loc.get("room") if loc.get("room").isnumeric() else None
     )
+
+
+def _parse_time(site, key):
+    try:
+        loc = site.get("occurrences")[0]
+    except Exception as e: 
+        logger.info("Skipping parsing for one record due to exception")
+        logger.warning(
+            "An error occurred while parsing the address for record "
+            + _get_id(site)
+            + " from "
+            + SOURCE_NAME
+            + ": "
+            + str(e)
+        )
+        return None
+    
+    return dateparser.parse(loc.get(key), ignoretz=True) if loc.get(key) else None
 
 # def _parse_time(site,)
 
 def _get_normalized_event(site: dict, timestamp: str) -> schema.NormalizedEvent:
-    return schema.NormalizedEvent(
-        identifier = _get_id(site),#: str
-        title = site.get("SUMMARY"),#: Optional[str]
-        location = _parse_location(site),#: Optional[Location]
-        # date = ,#: Optional[StringDate]
-        # isAllDay = site.get("allDay"),#: Optional[bool]
-        start = dateparser.parse(site.get("DTSTART")).replace(tzinfo=None),#: Optional[StringTime]
-        end = dateparser.parse(site.get("DTEND")).replace(tzinfo=None) if site.get("DTEND") else None,#: Optional[StringTime]
-        # duration = ,#: Optional[StringTime]
-        description = site.get("DESCRIPTION"),#: Optional[str]
-        # host = ,#: Optional[str]
-        is_public = True,#: bool
-        source = schema.EventSource(
-            source_id = site.get("id"),#TODO: maybe this needs fixing
-            # source_link: Optional[str]
-            # submitter: Optional[str]
-            processed_at =  timestamp
-        ),#: EventSource
-    )
+    # {
+        # "name": "WGSS Movie and Discussion Night | She Said",
+        # "title_link": null, 
+        # "description": "She Said\u00a0is a 2022 American\u00a0drama film\u00a0directed by\u00a0Maria Schrader\u00a0and written by\u00a0Rebecca Lenkiewicz, based on the\u00a02019 book of the same title\u00a0by reporters\u00a0Jodi Kantor\u00a0and\u00a0Megan Twohey. The film stars\u00a0Carey Mulligan\u00a0and\u00a0Zoe Kazan\u00a0as Twohey and Kantor, respectively, and follows their\u00a0New York Times\u00a0investigation that exposed\u00a0Harvey Weinstein's history of\u00a0abuse and sexual misconduct against women. The shocking story also serves as a launching pad for the #MeToo movement, shattering decades of silence around the subject of sexual assault and harassment.", 
+        #"ical_link": "https://rit.edu/events/node/472305/calendar.ics", 
+        #"event_link": "https://www.rit.edu/events/wgss-movie-and-discussion-night-she-said", 
+        #"node_id": "472305", 
+        #"occurrences": [
+            #{"location": null,
+            # "building": "Liberal Arts Hall", 
+            #"room": "McKenzie Commons (LBR-1251)", 
+            #"is_all_day": false,
+            # "starttime": "2024-03-25T19:00:00", 
+            #"endtime": "2024-03-25T21:30:00"
+        # }],
+        # "is_public": true,
+        # "interp": "Interpreter Requested?", 
+        #"contact_name": "Silvia Benso", 
+        #"contact_email": "sxbgsl@rit.edu", 
+        #"contact_phone": null,
+        # "topics": [
+            # "commitment to goodness", 
+            #"creativity and innovation", 
+            #"diversity", 
+            #"games, film, and digital media", 
+            #"student clubs and organizations", 
+            #"women"
+        # ]
+    # }
+    try:
+        return schema.NormalizedEvent(
+            identifier = _get_id(site),#: str
+            title = site.get("name"),#: Optional[str]
+            location = _parse_location(site),#: Optional[Location]
+            # date = ,#: Optional[StringDate]
+            isAllDay = site.get("is_all_day"),#: Optional[bool]
+            start = _parse_time(site, "starttime"),#: Optional[StringTime]
+            end = _parse_time(site, "endtime"),#: Optional[StringTime]
+            # duration = ,#: Optional[StringTime]
+            description = site.get("description"),#: Optional[str]
+            # host = ,#: Optional[str]
+            is_public = site.get("is_public"),#: bool
+            source = schema.EventSource(
+                source_id = site.get("node_id"),#TODO: maybe this needs fixing
+                # source_link: Optional[str]
+                # submitter: Optional[str]
+                processed_at =  timestamp
+            ),#: EventSource
+        )
+    except dateparser.ParserError as e:
+        logger.info("Skipping parsing for one record due to exception")
+        logger.warning(
+            "An error occurred while parsing the address for record "
+            + _get_id(site)
+            + " from "
+            + SOURCE_NAME
+            + ": "
+            + str(e)
+        )
+        return None
+
 
 
 
@@ -419,6 +479,7 @@ for in_filepath in json_filepaths:
                     parsed_site, parsed_at_timestamp
                 )
 
-                print(normalized_site)
-                json.dump(normalized_site.dict(), fout, default=json_serial)
-                fout.write("\n")
+                # print(normalized_site)
+                if normalized_site is not None:
+                    json.dump(normalized_site.dict(), fout, default=json_serial)
+                    fout.write("\n")
