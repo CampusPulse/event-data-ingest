@@ -12,7 +12,9 @@ import urllib.parse
 from typing import List
 
 import yaml
-from campuspulse_event_ingest_schema import location as schema
+import campuspulse_event_ingest_schema as schema
+from dateutil import parser as dateparser
+from event_data_ingest.utils.jsonserial import json_serial
 
 # Configure logger
 logging.basicConfig(
@@ -36,13 +38,11 @@ def _get_config(yml_config: pathlib.Path) -> dict:
     return config
 
 
-def _get_source(config: dict, site: dict, timestamp: str) -> schema.Source:
-    return schema.Source(
-        source=config["site"],
-        id=site["clinic_id"],
-        fetched_from_uri=urllib.parse.urljoin(config["url"], "clinic/search"),
-        fetched_at=timestamp,
-        data=site,
+def _get_source(config: dict, site: dict, timestamp: str) -> schema.EventSource:
+    return schema.EventSource(
+        source_id=site["UID"],
+        processed_at=timestamp,
+        # data=site,
     )
 
 
@@ -130,42 +130,84 @@ def _get_source(config: dict, site: dict, timestamp: str) -> schema.Source:
 #     ]
 
 
-# def _get_out_filepath(in_filepath: pathlib.Path, out_dir: pathlib.Path) -> pathlib.Path:
-#     filename, _ = os.path.splitext(in_filepath.name)
-#     return out_dir.joinpath(f"{filename}.normalized.ndjson")
+def _parse_location(site):
+    try:
+        loc = site["LOCATION"]
+    except Exception as e: 
+        logger.info("Skipping parsing for one record due to exception")
+        logger.warning(
+            "An error occurred while parsing the address for record "
+            + site["UID"]
+            + ": "
+            + str(e)
+        )
+        return None
+
+    return schema.Location(
+        street=loc,
+        # city= city,
+        # state=state
+    )
 
 
-# def normalize(config: dict, site: dict, timestamp: str) -> str:
-#     """
-#     sample:
-#     {"name": "Rebel Med NW - COVID Vaccine Clinic", "date": "04/30/2021", "address": "5401 Leary Ave NW, Seattle WA, 98107", "vaccines": "Moderna COVID-19 Vaccine", "ages": "Adults, Seniors", "info": "truncated", "hours": "09:00 am - 05:00 pm", "available": "14", "special": "If you are signing up for a second dose, you must get the same vaccine brand as your first dose.", "clinic_id": "2731"} # noqa: E501
-#     """
-#     normalized = schema.NormalizedLocation(
-#         id=f"{config['site']}:{site['clinic_id']}",
-#         name=site["name"],
-#         address=_get_address(site),
-#         availability=schema.Availability(appointments=True),
-#         contact=_get_contact(config, site),
-#         inventory=_get_inventory(site),
-#         opening_dates=_get_opening_dates(site),
-#         opening_hours=_get_opening_hours(site),
-#         notes=_get_notes(site),
-#         source=_get_source(config, site, timestamp),
-#     ).dict()
-#     return normalized
+def _get_out_filepath(in_filepath: pathlib.Path, out_dir: pathlib.Path) -> pathlib.Path:
+    filename, _ = os.path.splitext(in_filepath.name)
+    return out_dir.joinpath(f"{filename}.normalized.ndjson")
+
+
+def normalize(config: dict, site: dict, timestamp: str) -> str:
+    """
+    sample:
+    {"name": "Rebel Med NW - COVID Vaccine Clinic", "date": "04/30/2021", "address": "5401 Leary Ave NW, Seattle WA, 98107", "vaccines": "Moderna COVID-19 Vaccine", "ages": "Adults, Seniors", "info": "truncated", "hours": "09:00 am - 05:00 pm", "available": "14", "special": "If you are signing up for a second dose, you must get the same vaccine brand as your first dose.", "clinic_id": "2731"} # noqa: E501
+    """
+    group = config["state"] 
+    source = config["site"]
+    ident = site["UID"]
+    return schema.NormalizedEvent(
+        identifier = f"{group}_{source}_{ident}",#: str
+        title = site.get("SUMMARY"),#: Optional[str]
+        location = _parse_location(site),#: Optional[Location]
+        # date = ,#: Optional[StringDate]
+        # isAllDay = site.get("allDay"),#: Optional[bool]
+        start = dateparser.parse(site.get("DTSTART")).replace(tzinfo=None),#: Optional[StringTime]
+        end = dateparser.parse(site.get("DTEND")).replace(tzinfo=None) if site.get("DTEND") else None,#: Optional[StringTime]
+        # duration = ,#: Optional[StringTime]
+        description = site.get("DESCRIPTION"),#: Optional[str]
+        # host = ,#: Optional[str]
+        is_public = True,#: bool
+        source = schema.EventSource(
+            source_id = site.get("UID"),
+            # source_link: Optional[str]
+            # submitter: Optional[str]
+            processed_at =  timestamp
+        ),#: EventSource
+    )
+    # normalized = schema.NormalizedLocation(
+    #     id=f"{config['site']}:{site['clinic_id']}",
+    #     name=site["name"],
+    #     address=_get_address(site),
+    #     availability=schema.Availability(appointments=True),
+    #     contact=_get_contact(config, site),
+    #     inventory=_get_inventory(site),
+    #     opening_dates=_get_opening_dates(site),
+    #     opening_hours=_get_opening_hours(site),
+    #     notes=_get_notes(site),
+    #     source=_get_source(config, site, timestamp),
+    # ).dict()
+    # return normalized
 
 
 parsed_at_timestamp = datetime.datetime.utcnow().isoformat()
 
 config = _get_config(YML_CONFIG)
 
-# if config["parser"] == "prepmod":
-#     for input_file in INPUT_DIR.glob("*.ndjson"):
-#         output_file = _get_out_filepath(input_file, OUTPUT_DIR)
-#         with input_file.open() as parsed_lines:
-#             with output_file.open("w") as fout:
-#                 for line in parsed_lines:
-#                     site = json.loads(line)
-#                     normalized_site = normalize(config, site, parsed_at_timestamp)
-#                     json.dump(normalized_site, fout)
-#                     fout.write("\n")
+if config["parser"] == "ics":
+    for input_file in INPUT_DIR.glob("*.ndjson"):
+        output_file = _get_out_filepath(input_file, OUTPUT_DIR)
+        with input_file.open() as parsed_lines:
+            with output_file.open("w") as fout:
+                for line in parsed_lines:
+                    site = json.loads(line)
+                    normalized_site = normalize(config, site, parsed_at_timestamp)
+                    json.dump(normalized_site.dict(), fout, default=json_serial)
+                    fout.write("\n")
