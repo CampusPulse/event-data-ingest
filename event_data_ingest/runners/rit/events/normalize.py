@@ -10,6 +10,7 @@ import json
 import os
 import pathlib
 import sys
+import pytz
 from typing import List, Optional, OrderedDict
 
 import pydantic
@@ -363,7 +364,7 @@ def _parse_location(site):
     )
 
 
-def _parse_time(site, key):
+def _parse_time(site, key, nullable=False, defaulttz=None):
     try:
         loc = site.get("occurrences")[0]
     except Exception as e: 
@@ -377,8 +378,20 @@ def _parse_time(site, key):
             + str(e)
         )
         return None
+        
+    should_ignore_tz = defaulttz is None
+
+    parsed_date = dateparser.parse(loc.get(key), ignoretz=should_ignore_tz) if loc.get(key) else None
+
+    if nullable and parsed_date is None:
+        return None
     
-    return dateparser.parse(loc.get(key), ignoretz=True) if loc.get(key) else None
+    needs_tz = parsed_date.tzinfo is None
+
+    if needs_tz:
+        parsed_date = parsed_date.replace(tzinfo=defaulttz)
+
+    return parsed_date 
 
 # def _parse_time(site,)
 
@@ -419,8 +432,8 @@ def _get_normalized_event(site: dict, timestamp: str) -> schema.NormalizedEvent:
             location = _parse_location(site),#: Optional[Location]
             # date = ,#: Optional[StringDate]
             isAllDay = site.get("is_all_day"),#: Optional[bool]
-            start = _parse_time(site, "starttime"),#: Optional[StringTime]
-            end = _parse_time(site, "endtime"),#: Optional[StringTime]
+            start = _parse_time(site, "starttime", defaulttz=pytz.timezone("US/Eastern")),#: Optional[StringTime]
+            end = _parse_time(site, "endtime", nullable=True, defaulttz=pytz.timezone("US/Eastern")),#: Optional[StringTime]
             # duration = ,#: Optional[StringTime]
             description = site.get("description"),#: Optional[str]
             # host = ,#: Optional[str]
