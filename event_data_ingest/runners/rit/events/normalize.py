@@ -19,6 +19,8 @@ import campuspulse_event_ingest_schema  as schema
 from dateutil import parser as dateparser
 from dateutil.tz import gettz
 
+from event_data_ingest.utils.jsonserial import json_serial
+
 from event_data_ingest.utils.log import getLogger
 # from event_data_ingest.utils.normalize import (
 #     normalize_address,
@@ -441,16 +443,6 @@ def _get_normalized_event(site: dict, timestamp: str) -> schema.NormalizedEvent:
             + str(e)
         )
         return None
-
-
-
-
-def json_serial(obj):
-    """JSON serializer for objects not serializable by default json code"""
-
-    if isinstance(obj, (datetime.datetime, datetime.date)):
-        return obj.isoformat()
-    raise TypeError ("Type %s not serializable" % type(obj))
 
 
 output_dir = pathlib.Path(sys.argv[1])
