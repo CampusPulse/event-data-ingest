@@ -2,6 +2,7 @@
 
 import calendar
 import datetime
+import pytz
 import json
 import logging
 import os
@@ -150,6 +151,22 @@ def _parse_location(site):
     )
 
 
+def _parse_time(site, key, nullable=False, defaulttz=None):
+    
+    should_ignore_tz = defaulttz is None
+
+    parsed_date = dateparser.parse(site.get(key), ignoretz=should_ignore_tz) if site.get(key) else None
+
+    if nullable and parsed_date is None:
+        return None
+    
+    needs_tz = parsed_date.tzinfo is None
+
+    if needs_tz:
+        parsed_date = parsed_date.replace(tzinfo=defaulttz)
+
+    return parsed_date 
+
 def _get_out_filepath(in_filepath: pathlib.Path, out_dir: pathlib.Path) -> pathlib.Path:
     filename, _ = os.path.splitext(in_filepath.name)
     return out_dir.joinpath(f"{filename}.normalized.ndjson")
@@ -165,8 +182,8 @@ def normalize(config: dict, site: dict, timestamp: str) -> str:
         location = _parse_location(site),#: Optional[Location]
         # date = ,#: Optional[StringDate]
         # isAllDay = site.get("allDay"),#: Optional[bool]
-        start = dateparser.parse(site.get("DTSTART"), ignoretz=True),#: Optional[StringTime]
-        end = dateparser.parse(site.get("DTEND"), ignoretz=True) if site.get("DTEND") else None,#: Optional[StringTime]
+        start = _parse_time(site, "DTSTART", defaulttz=pytz.timezone('US/Eastern')),#dateparser.parse(site.get("DTSTART")),#: Optional[StringTime]
+        end = _parse_time(site, "DTEND", defaulttz=pytz.timezone('US/Eastern'), nullable=True),#dateparser.parse(site.get("DTEND")) if site.get("DTEND") else None,#: Optional[StringTime]
         # duration = ,#: Optional[StringTime]
         description = site.get("DESCRIPTION"),#: Optional[str]
         # host = ,#: Optional[str]
