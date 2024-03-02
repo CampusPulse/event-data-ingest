@@ -440,8 +440,8 @@ def _get_normalized_event(site: dict, timestamp: str) -> schema.NormalizedEvent:
             is_public = site.get("is_public"),#: bool
             source = schema.EventSource(
                 source_id = site.get("node_id"),#TODO: maybe this needs fixing
-                # source_link: Optional[str]
-                # submitter: Optional[str]
+                source_link = site.get("event_link"),
+                # submitter= Optional[str]
                 processed_at =  timestamp
             ),#: EventSource
         )
