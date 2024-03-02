@@ -182,10 +182,9 @@ def normalize(config: dict, site: dict, timestamp: str) -> str:
         location = _parse_location(site),#: Optional[Location]
         # date = ,#: Optional[StringDate]
         # isAllDay = site.get("allDay"),#: Optional[bool]
-        start = _parse_time(site, "DTSTART", defaulttz=pytz.timezone('US/Eastern')),#dateparser.parse(site.get("DTSTART")),#: Optional[StringTime]
-        end = _parse_time(site, "DTEND", defaulttz=pytz.timezone('US/Eastern'), nullable=True),#dateparser.parse(site.get("DTEND")) if site.get("DTEND") else None,#: Optional[StringTime]
-        # duration = ,#: Optional[StringTime]
-        description = site.get("DESCRIPTION"),#: Optional[str]
+        start = _parse_time(site, "DTSTART", defaulttz=pytz.timezone('US/Eastern')),
+        end = _parse_time(site, "DTEND", defaulttz=pytz.timezone('US/Eastern'), nullable=True),
+        description = site.get("DESCRIPTION"),
         host = site.get("CLUB_ACRONYM"), # this is not a standard part of ICS, its something added by the campusgroups parser
         is_public = True,#this came from a public data feed so we assume its public
         source = schema.EventSource(
