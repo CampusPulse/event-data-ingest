@@ -187,7 +187,7 @@ def normalize(config: dict, site: dict, timestamp: str) -> str:
         # duration = ,#: Optional[StringTime]
         description = site.get("DESCRIPTION"),#: Optional[str]
         # host = ,#: Optional[str]
-        is_public = True,#: bool
+        is_public = True,#this came from a public data feed so we assume its public
         source = schema.EventSource(
             source_id = site.get("UID"),
             # source_link: Optional[str]
