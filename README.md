@@ -11,11 +11,11 @@ Pipeline for ingesting data about events on campus.
 1. Choose an unassigned [issue](https://github.com/CampusPulse/data-ingest/issues), and comment that you're working on it.
 1. Open a PR containing a new `fetch`, `parse`, or `normalize` script! ([details on these stages](https://github.com/CampusPulse/data-ingest/wiki/Runner-Pipeline-Stages))
 
-Results are periodically committed to [`vaccine-feed-ingest-results`](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results). Once your PR is merged, you will be able to see the output of your work there!
+<!-- Results are periodically committed to [`vaccine-feed-ingest-results`](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results). Once your PR is merged, you will be able to see the output of your work there! -->
 
 ### Run the tool
 
-[See the wiki](https://github.com/CampusPulse/data-ingest/wiki/Run-vaccine-feed-ingest) for instructions on how to run `event-data-ingest`.
+[See the wiki](https://github.com/CampusPulse/data-ingest/wiki/Run-event-data-ingest) for instructions on how to run `event-data-ingest`.
 
 
 ## Production Details
