@@ -322,6 +322,8 @@ def fetch(
     site_dirs = site.get_site_dirs(state, sites, exclude_sites)
 
     for site_dir in site_dirs:
+        if site_dir.name.startswith("_"):
+            continue
         ingest.run_fetch(
             site_dir,
             output_dir,
@@ -353,6 +355,8 @@ def parse(
     site_dirs = site.get_site_dirs(state, sites, exclude_sites)
 
     for site_dir in site_dirs:
+        if site_dir.name.startswith("_"):
+            continue
         ingest.run_parse(
             site_dir,
             output_dir,
@@ -385,6 +389,8 @@ def normalize(
     site_dirs = site.get_site_dirs(state, sites, exclude_sites)
 
     for site_dir in site_dirs:
+        if site_dir.name.startswith("_"):
+            continue
         ingest.run_normalize(
             site_dir,
             output_dir,
@@ -413,6 +419,8 @@ def all_stages(
     site_dirs = site.get_site_dirs(state, sites, exclude_sites)
 
     for site_dir in site_dirs:
+        if site_dir.name.startswith("_"):
+            continue
         fetch_success = ingest.run_fetch(
             site_dir, output_dir, timestamp, fail_on_runner_error=fail_on_runner_error
         )
@@ -458,6 +466,8 @@ def enrich(
     site_dirs = site.get_site_dirs(state, sites, exclude_sites)
 
     for site_dir in site_dirs:
+        if site_dir.name.startswith("_"):
+            continue
         ingest.run_enrich(
             site_dir,
             output_dir,
@@ -587,6 +597,8 @@ def pipeline(
     sites_to_load = []
 
     for site_dir in site_dirs:
+        if site_dir.name.startswith("_"):
+            continue
         if common.PipelineStage.FETCH in stages:
             fetch_success = ingest.run_fetch(
                 site_dir,
@@ -676,6 +688,8 @@ def api_cache_remove(
     site_dirs = site.get_site_dirs(state, sites, exclude_sites)
 
     for site_dir in site_dirs:
+        if site_dir.name.startswith("_"):
+            continue
         caching.remove_api_cache(
             output_dir,
             site_dir,
@@ -700,6 +714,8 @@ def api_cache_evict(
     site_dirs = site.get_site_dirs(state, sites, exclude_sites)
 
     for site_dir in site_dirs:
+        if site_dir.name.startswith("_"):
+            continue
         num_evicted_keys = caching.evict_api_cache(
             output_dir,
             site_dir,
