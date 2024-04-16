@@ -31,9 +31,15 @@ If you are developing a feature that interacts with the remote storage, you need
 
 Results are also periodically committed to [`vaccine-feed-ingest-results`](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results).
 
-### Instructions
+### Loading to a frontend API
 
-1. Authenticate to gcloud with an account that has access to `vaccine-feeds-dev` bucket.
+To load the generated output to a frontend API, the following bash one-liner can be used to grab the most recent normalized output from all runner stages and concatenate them together into one file.
+
+`find out -type f -exec ls -lt {} + | grep "normalized" | awk '{print $NF}' 2> /dev/null |xargs cat > "$(date +'%Y-%m-%d')_concatenated_events.parsed.normalized.ndjson"`
+
+
+
+<!-- 1. Authenticate to gcloud with an account that has access to `vaccine-feeds-dev` bucket.
 
   ```sh
   gcloud auth application-default login
@@ -61,4 +67,4 @@ Results are also periodically committed to [`vaccine-feed-ingest-results`](https
 
   ```sh
   poetry run event-data-ingest load-to-vial ca/sf_gov
-  ```
+  ``` -->
