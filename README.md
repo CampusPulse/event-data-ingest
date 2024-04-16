@@ -35,7 +35,7 @@ Results are also periodically committed to [`vaccine-feed-ingest-results`](https
 
 To load the generated output to a frontend API, the following bash one-liner can be used to grab the most recent normalized output from all runner stages and concatenate them together into one file.
 
-`find out -type f -exec ls -lt {} + | grep "normalized" | awk '{print $NF}' 2> /dev/null |xargs cat > "$(date +'%Y-%m-%d')_concatenated_events.parsed.normalized.ndjson"`
+`find out -type f -mtime -1 -exec ls -lt {} + | grep "normalized" | awk '{print $NF}' 2> /dev/null |xargs cat > "$(date +'%Y-%m-%d')_concatenated_events.parsed.normalized.ndjson"`
 
 
 
