@@ -22,20 +22,21 @@ Pipeline for ingesting data about events on campus.
 
 For more information on ([pipeline stages](https://github.com/CampusPulse/data-ingest/wiki/Runner-Pipeline-Stages)) and how to contribute, [see the wiki](https://github.com/CampusPulse/data-ingest/wiki)!
 
-The below details on interacting with our production environment are intended for staff developers.
 ### Overall setup
 
-In production, all stages for all runners are run, and outputs are stored to the `vaccine-feeds` bucket on GCS.
+In production, all stages for all runners are run, and outputs are stored to a JSON file.
 
-If you are developing a feature that interacts with the remote storage, you need to test GCS then install the `gcloud` SDK from setup instructions and use the `vaccine-feeds-dev` bucket (you will need to be granted access).
+In production this is done with the `Dockerfile`
 
-Results are also periodically committed to [`vaccine-feed-ingest-results`](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results).
+<!-- Results are also periodically committed to [`vaccine-feed-ingest-results`](https://github.com/CAVaccineInventory/vaccine-feed-ingest-results). -->
 
 ### Loading to a frontend API
 
-To load the generated output to a frontend API, the following bash one-liner can be used to grab the most recent normalized output from all runner stages and concatenate them together into one file.
+To load the generated output to a frontend API, the following bash one-liner is used to grab the most recent normalized output from all runner stages and concatenate them together into one file.
 
 `find out -type f -mtime -1 -exec ls -lt {} + | grep "normalized" | awk '{print $NF}' 2> /dev/null |xargs cat > "$(date +'%Y-%m-%d')_concatenated_events.parsed.normalized.ndjson"`
+
+This is done in production with the `combine.Dockerfile`.
 
 
 
