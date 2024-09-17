@@ -11,8 +11,8 @@ WORKDIR /event-data-ingest
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSL https://install.python-poetry.org/ | python -
-ENV PATH "/home/vaccine/.poetry/bin:$PATH"
-RUN /home/vaccine/.poetry/bin/poetry config virtualenvs.create false && \
-    /home/vaccine/.poetry/bin/poetry install --extras lint --no-interaction --no-ansi
+ENV PATH "/home/scraper/.poetry/bin:$PATH"
+RUN /home/scraper/.poetry/bin/poetry config virtualenvs.create false && \
+    /home/scraper/.poetry/bin/poetry install --extras lint --no-interaction --no-ansi
 
 CMD ["bash"]
