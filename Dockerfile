@@ -1,11 +1,11 @@
 FROM python:3.9.2-buster
 LABEL name=event-data-ingest
 
-RUN useradd -m vaccine && mkdir event-data-ingest && chown vaccine:vaccine event-data-ingest
+RUN useradd -m scraper && mkdir event-data-ingest && chown scraper:scraper event-data-ingest
 
 COPY ./ /event-data-ingest/
 
-USER vaccine
+USER scraper
 
 WORKDIR /event-data-ingest
 
