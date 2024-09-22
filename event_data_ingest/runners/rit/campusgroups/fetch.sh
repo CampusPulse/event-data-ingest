@@ -21,4 +21,4 @@ touch "${output_dir}/events.ics"
 
 ###
 
-(cd "$output_dir" && curl --silent "https://campusgroups.rit.edu/ical/rit/ical_rit.ics" -o 'events.ics')
+(cd "$output_dir" && curl --silent -L "https://campusgroups.rit.edu/ical/rit/ical_rit.ics" -o 'events.ics')
