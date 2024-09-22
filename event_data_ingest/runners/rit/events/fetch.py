@@ -27,10 +27,11 @@ outdir = Path(output_dir)
 
 
 while True:
-	print(f"getting event page {page}")
+	print(f"getting event page {page} - ", end="")
 	params = urllib.parse.urlencode({"page": page})
 	url = f"{base_url.geturl()}?{params}"
 	response = requests.get(url, allow_redirects=False, headers=headers)
+	print(response.status_code)
 	content = response.text
 
 	with open(outdir / f"page_{page}.html", "w") as f:
