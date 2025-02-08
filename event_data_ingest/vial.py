@@ -19,8 +19,8 @@
 
 # logger = getLogger(__file__)
 
-# # Default import batch size to vial
-# IMPORT_BATCH_SIZE = 100
+# Default import batch size to vial
+IMPORT_BATCH_SIZE = 100
 
 
 # @contextlib.contextmanager
