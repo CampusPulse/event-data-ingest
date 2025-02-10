@@ -133,6 +133,10 @@ if __name__ == "__main__":
         events = list(cal.walk(name="VEVENT"))
 
         for event in events:
+            
+            event["ORGANIZER_URL"] = event["ORGANIZER"]
+            event["ORGANIZER"] = event["ORGANIZER"].params["CN"]
+            
             for c in event["CATEGORIES"]:
                 cg_category_type = c.params["X-CG-CATEGORY"]
                 event[cg_category_type] = c.cats
