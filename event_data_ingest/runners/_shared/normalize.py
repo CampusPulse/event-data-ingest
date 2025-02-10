@@ -185,7 +185,7 @@ def normalize(config: dict, site: dict, timestamp: str) -> str:
         start = _parse_time(site, "DTSTART", defaulttz=pytz.timezone('US/Eastern')),
         end = _parse_time(site, "DTEND", defaulttz=pytz.timezone('US/Eastern'), nullable=True),
         description = site.get("DESCRIPTION"),
-        host = site.get("CLUB_ACRONYM")[0] if  site.get("CLUB_ACRONYM") is not None else None, # this is not a standard part of ICS, its something added by the campusgroups parser
+        host = site.get("ORGANIZER"), # this is not a standard part of ICS, its something added by the campusgroups parser
         is_public = True,#this came from a public data feed so we assume its public
         source = schema.EventSource(
             source_id = site.get("UID"),
